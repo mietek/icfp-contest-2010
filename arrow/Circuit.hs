@@ -12,6 +12,11 @@ import qualified Filter as F
 data Trit = T0 | T1 | T2
   deriving (Enum, Eq)
 
+instance Num Trit where
+  fromInteger 0 = T0
+  fromInteger 1 = T1
+  fromInteger 2 = T2
+
 instance Show Trit where
   show = show . fromEnum
 
