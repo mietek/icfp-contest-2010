@@ -5,16 +5,21 @@ module Circuit where
 import Control.Arrow (returnA)
 import Debug.Trace (trace)
 
-import Filter
+import Filter hiding (step, run)
+import qualified Filter as F
 
 
 data Trit = T0 | T1 | T2
-  deriving Eq
+  deriving (Enum, Eq)
 
 instance Show Trit where
-  show T0 = "0"
-  show T1 = "1"
-  show T2 = "2"
+  show = show . fromEnum
+
+instance Read Trit where
+  readsPrec _ "0" = [(T0, "")]
+  readsPrec _ "1" = [(T1, "")]
+  readsPrec _ "2" = [(T2, "")]
+
 
 type Gate = Filter (Trit, Trit) (Trit, Trit)
 type Circuit = Filter Trit Trit
@@ -58,31 +63,16 @@ config4 = proc x -> do
   returnA -< y
 
 
-serverInput :: [Trit]
-serverInput = [T0, T1, T2, T0, T2, T1, T0, T1, T2, T1, T0, T2, T0, T1, T2, T0, T2]
+run :: Circuit -> String -> String
+run c s = concatMap show (F.run c (map (read . return) s))
 
 
-config1Output :: [Trit]
-config1Output = [T0, T2, T1, T2, T0, T1, T1, T2, T1, T0, T0, T0, T0, T2, T1, T2, T0]
-
-config2Output :: [Trit]
-config2Output = [T2, T2, T1, T2, T0, T2, T2, T1, T0, T2, T2, T0, T2, T2, T1, T2, T0]
-
-config3Output :: [Trit]
-config3Output = [T0, T1, T2, T1, T0, T2, T2, T1, T2, T0, T0, T0, T0, T1, T2, T1, T0]
-
-config4Output :: [Trit]
-config4Output = [T2, T2, T0, T2, T2, T0, T2, T2, T0, T2, T2, T0, T2, T2, T0, T2, T2]
-
-
-config1Test :: Bool
-config1Test = run config1 serverInput == config1Output
-
-config2Test :: Bool
-config2Test = run config2 serverInput == config2Output
-
-config3Test :: Bool
-config3Test = run config3 serverInput == config3Output
-
-config4Test :: Bool
-config4Test = run config4 serverInput == config4Output
+input = "01202101210201202"
+output1 = "02120112100002120"
+output2 = "22120221022022120"
+output3 = "01210221200001210"
+output4 = "22022022022022022"
+test1 = run config1 input == output1
+test2 = run config2 input == output2
+test3 = run config3 input == output3
+test4 = run config4 input == output4
