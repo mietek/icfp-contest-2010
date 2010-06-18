@@ -5,6 +5,16 @@ import Text.ParserCombinators.Parsec
 import Data.Char
 import Control.Applicative hiding ((<|>), many)
 import Array
+import System.Environment
+import System.Exit
+
+data Trit = Z | O | T
+zero = Z
+z = Z
+one = O
+o = one
+two = T
+t = T
 
 data Delay = Delay | NoDelay deriving Show
 data Wire  = External | GateConn Int Delay deriving Show
@@ -54,5 +64,33 @@ pCircuit = do
 
 parseCircuit s = parse pCircuit "" s
 
+parseTernaryStream input = aux input []
+    where aux [] acc     = Just acc
+          aux (x:xs) acc = case x of
+                             '0' -> aux xs $ z : acc
+                             '1' -> aux xs $ o : acc
+                             '2' -> aux xs $ t : acc
+                             _ -> Nothing
+
+showTernaryStream = map f
+    where f Z = '0'
+          f O = '1'
+          f T = '2'
+
+evalCircuit :: Circuit -> [Trit] -> [Trit]
+evalCircuit = undefined
+
 main :: IO ()
-main = print . parseCircuit =<< getContents
+main = do
+  args <- getArgs
+  case args of
+    [factorySchemaFile] -> do
+        schema <- readFile factorySchemaFile
+        case parseCircuit schema of
+          Left e -> print e >> exitFailure
+          Right factory -> do
+              rawInput <- getContents
+              case parseTernaryStream rawInput of
+                Nothing -> putStrLn "broken input" >> exitFailure
+                Just input -> putStrLn $ showTernaryStream $ evalCircuit factory input
+    _ -> putStrLn "usage: ./circuit shema.txt" >> exitFailure
