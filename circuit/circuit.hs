@@ -63,7 +63,7 @@ setDelays = zipWith fixGate [0..]
               in GateConn n conn delay
           fixOutWire i External = External
           fixOutWire i (GateConn n conn _) =
-              let delay = if n < i then -- jestesmy w i-tej bramce, wypuszczamy kabel do n-tej
+              let delay = if n <= i then -- jestesmy w i-tej bramce, wypuszczamy kabel do n-tej
                               Delay
                           else
                               NoDelay
