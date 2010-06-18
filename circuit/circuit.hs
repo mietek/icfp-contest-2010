@@ -26,6 +26,35 @@ data Circuit = Circuit
     , cOutput :: Wire
     } deriving Show
 
+prWire n c = concat ["r", show c, show n]
+
+prInWire External = "out"
+prInWire (GateConn n c d) = prWire n c ++ primeDelay d
+
+prOutWire External _ _ = "inp"
+prOutWire _ c i = prWire i c
+
+primeDelay Delay = "'"
+primeDelay _ = ""
+
+prGate (Gate (li,ri)(lo,ro)) i = concat [ "(", prOutWire lo L i, ", ", prOutWire ro R i
+                                        , ") <- gate -< ("
+                                        , prInWire li, ", ", prInWire ri, ")"
+                                        ]
+
+delayWires gates = map delayWire delayedWires
+    where delayedWires = filter delayed (leftOutputs ++ rightOutputs)
+          (leftOutputs, rightOutputs) = unzip $ map (\(Gate out _) -> out) gates
+          delayed (GateConn _ _ Delay) = True
+          delayed _ = False
+          delayWire (GateConn n c _) = prWire n c ++ "' <- delay T0 -< " ++ prWire n c
+
+printGates c = unlines $ intro ++ body ++ outro
+    where gates = elems $ cGates c
+          body = map ("      "++) (delayWires gates ++ zipWith prGate gates [0..])
+          intro = ["foo = proc inp -> do", "  rec"]
+          outro = ["  returnA -< out"]
+
 whiteSpace = choice [ char ' '
                     , char '\n'
                     , char '\t'
@@ -109,7 +138,7 @@ main = do
         schema <- readFile factorySchemaFile
         case parseCircuit schema of
           Left e -> print e >> exitFailure
-          Right factory -> print factory
+          Right factory -> putStrLn $ printGates factory
               -- do
               -- rawInput <- getContents
               -- case parseTernaryStream rawInput of
