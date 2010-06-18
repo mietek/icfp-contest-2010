@@ -3,7 +3,7 @@ module Main where
 
 import Text.ParserCombinators.Parsec
 import Data.Char
-import Control.Applicative hiding ((<|>))
+import Control.Applicative hiding ((<|>), many)
 import Array
 
 data Delay = Delay | NoDelay deriving Show
@@ -14,6 +14,13 @@ data Circuit = Circuit
     , cInput  :: Wire
     , cOutput :: Wire
     } deriving Show
+
+whiteSpace = choice [ char ' '
+                    , char '\n'
+                    , char '\t'
+                    ]
+
+skipWhiteSpace = many whiteSpace
 
 pDelay =  (char 'L' >> return Delay)
       <|> (char 'R' >> return NoDelay)
@@ -27,21 +34,21 @@ pWire =  (char 'X' >> return External)
 pGate = do
   leftInput <- pWire
   rightInput <- pWire
-  string "0#"
+  skipWhiteSpace >> char '0' >> skipWhiteSpace >> char '#' >> skipWhiteSpace
   leftOutput <- pWire
   rightOutput <- pWire
   return $ Gate (leftInput,rightInput) (leftOutput, rightOutput)
 
 pGates = do
-  gates <- pGate `sepBy1` string ",\n"
+  gates <- pGate `sepBy1` (char ',' >> skipWhiteSpace)
   let len = length gates
   return $ listArray (0,len-1) gates
 
 pCircuit = do
   inp <- pWire
-  string ":\n"
+  char ':' >> skipWhiteSpace
   gates <- pGates
-  string ":\n"
+  char ':' >> skipWhiteSpace
   out <- pWire
   return $ Circuit gates inp out
 
