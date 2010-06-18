@@ -72,9 +72,9 @@ loop (F f) = F $ \a ->
 step :: Filter a b -> a -> (b, Filter a b)
 step (F f) a = f a
 
-run :: Filter a a -> [a] -> ([a], Filter a a)
-run f [] = ([], f)
+run :: Filter a a -> [a] -> [a]
+run _ [] = []
 run f (a : as) =
   let (b, f') = step f a
-      (bs, f'') = run f' as in
-  (b : bs, f'')
+      bs = run f' as in
+  b : bs

@@ -3,6 +3,7 @@
 module Gate where
 
 import Control.Arrow (returnA)
+import Debug.Trace (trace)
 
 import Filter
 
@@ -47,15 +48,18 @@ mkConfig4 g = proc x -> do
 
 
 finrod :: (Trit, Trit) -> (Trit, Trit)
-finrod (T0, T0) = (T0, T2)
-finrod (T0, T1) = (T2, T2)
-finrod (T0, T2) = (T1, T2)
-finrod (T1, T0) = (T1, T2)
-finrod (T1, T1) = (T2, T0)
-finrod (T1, T2) = (T2, T1)
-finrod (T2, T0) = (T2, T2)
-finrod (T2, T1) = (T1, T0)
-finrod (T2, T2) = (T0, T0)
+finrod (l, r) =
+  trace ("<<" ++ show l ++ " " ++ show r ++ ">>") $
+    case (l, r) of
+      (T0, T0) -> (T0, T2)
+      (T0, T1) -> (T2, T2)
+      (T0, T2) -> (T1, T2)
+      (T1, T0) -> (T1, T2)
+      (T1, T1) -> (T2, T0)
+      (T1, T2) -> (T2, T1)
+      (T2, T0) -> (T2, T2)
+      (T2, T1) -> (T1, T0)
+      (T2, T2) -> (T0, T0)
 
 input :: [Trit]
 input = [T0, T1, T2, T0, T2, T1, T0, T1, T2, T1, T0, T2, T0, T1, T2, T0, T2]
