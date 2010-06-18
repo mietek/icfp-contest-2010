@@ -15,6 +15,8 @@ instance Num Trit where
   (+) = toTrit (+)
   (*) = toTrit (*)
   (-) = toTrit (-)
+  abs = id
+  signum = const 0
   fromInteger 0 = T0
   fromInteger 1 = T1
   fromInteger 2 = T2
