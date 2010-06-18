@@ -129,3 +129,28 @@ testServer4 = run config4 serverInput == serverOutput4
 taskInput  = "02222220210110011"
 taskOutput = "11021210112101221"
 testTask = run sample taskInput == taskOutput
+
+
+arcs :: Trit -> Trit -> [((Trit, Trit), (Trit, Trit))]
+arcs T0 T0 = [((T0, T0), (T0, T2))]
+arcs T0 T1 = [((T0, T2), (T1, T2)),
+              ((T1, T0), (T1, T2))]
+arcs T0 T2 = [((T0, T0), (T0, T2)),
+              ((T0, T1), (T2, T2)),
+              ((T0, T2), (T1, T2)),
+              ((T1, T0), (T1, T2)),
+              ((T2, T0), (T2, T2))]
+arcs T1 T0 = [((T1, T1), (T0, T0))]
+arcs T1 T1 = [((T1, T0), (T1, T2)),
+              ((T1, T2), (T2, T1)),
+              ((T2, T1), (T1, T1))]
+arcs T1 T2 = [((T0, T1), (T2, T2)),
+              ((T1, T0), (T1, T2)),
+              ((T1, T2), (T2, T1))]
+arcs T2 T0 = [((T2, T2), (T0, T0))]
+arcs T2 T1 = [((T0, T2), (T1, T2)),
+              ((T1, T2), (T2, T1)),
+              ((T2, T1), (T1, T1))]
+arcs T2 T2 = [((T0, T2), (T1, T2)),
+              ((T1, T2), (T2, T1)),
+              ((T2, T0), (T2, T2))]
