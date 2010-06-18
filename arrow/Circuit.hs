@@ -3,7 +3,6 @@
 module Circuit where
 
 import Control.Arrow (returnA)
-import Debug.Trace (trace)
 
 import Filter hiding (step, run)
 import qualified Filter as F
@@ -31,16 +30,19 @@ type Circuit = Filter Trit Trit
 
 
 gate :: Gate
-gate = lift g where
-  g (T0, T0) = (T0, T2)
-  g (T0, T1) = (T2, T2)
-  g (T0, T2) = (T1, T2)
-  g (T1, T0) = (T1, T2)
-  g (T1, T1) = (T0, T0)
-  g (T1, T2) = (T2, T1)
-  g (T2, T0) = (T2, T2)
-  g (T2, T1) = (T1, T1)
-  g (T2, T2) = (T0, T0)
+gate = lift h where
+  -- g (T0, T0) = (T0, T2)
+  -- g (T0, T1) = (T2, T2)
+  -- g (T0, T2) = (T1, T2)
+  -- g (T1, T0) = (T1, T2)
+  -- g (T1, T1) = (T0, T0)
+  -- g (T1, T2) = (T2, T1)
+  -- g (T2, T0) = (T2, T2)
+  -- g (T2, T1) = (T1, T1)
+  -- g (T2, T2) = (T0, T0)
+  h (a, b) = let (x, y) = (fromEnum a, fromEnum b)
+                 (c, d) = ((x - y) `mod` 3, (x * y - 1) `mod` 3) in
+             (toEnum c, toEnum d)
 
 
 config1 :: Circuit
