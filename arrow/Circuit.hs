@@ -12,9 +12,14 @@ data Trit = T0 | T1 | T2
   deriving (Enum, Eq)
 
 instance Num Trit where
+  (+) = toTrit (+)
+  (*) = toTrit (*)
+  (-) = toTrit (-)
   fromInteger 0 = T0
   fromInteger 1 = T1
   fromInteger 2 = T2
+
+toTrit f x y  = toEnum $ (fromEnum x `f` fromEnum y) `mod` 3
 
 instance Show Trit where
   show = show . fromEnum
@@ -30,7 +35,7 @@ type Circuit = Filter Trit Trit
 
 
 gate :: Gate
-gate = lift h where
+gate = lift $ \(x,y) -> (x - y, x * y -1)
   -- g (T0, T0) = (T0, T2)
   -- g (T0, T1) = (T2, T2)
   -- g (T0, T2) = (T1, T2)
@@ -40,9 +45,9 @@ gate = lift h where
   -- g (T2, T0) = (T2, T2)
   -- g (T2, T1) = (T1, T1)
   -- g (T2, T2) = (T0, T0)
-  h (a, b) = let (x, y) = (fromEnum a, fromEnum b)
+{-  h (a, b) = let (x, y) = (fromEnum a, fromEnum b)
                  (c, d) = ((x - y) `mod` 3, (x * y - 1) `mod` 3) in
-             (toEnum c, toEnum d)
+             (toEnum c, toEnum d)-}
 
 
 config1 :: Circuit
