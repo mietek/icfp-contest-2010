@@ -8,6 +8,7 @@ import Control.Monad
 import Array
 import System.Environment
 import System.Exit
+import Data.List
 
 data Trit = Z | O | T
 zero = Z
@@ -17,15 +18,15 @@ o = one
 two = T
 t = T
 
-data Delay = Delay | NoDelay deriving Show
-data Conn  = L | R deriving Show
-data Wire  = External | GateConn Int Conn Delay deriving Show
-data Gate  = Gate (Wire, Wire) (Wire, Wire) deriving Show
+data Delay = Delay | NoDelay deriving (Show, Eq)
+data Conn  = L | R deriving (Show, Eq)
+data Wire  = External | GateConn Int Conn Delay deriving (Show, Eq)
+data Gate  = Gate (Wire, Wire) (Wire, Wire) deriving (Show, Eq)
 data Circuit = Circuit
     { cGates  :: Array Int Gate
     , cInput  :: Wire
     , cOutput :: Wire
-    } deriving Show
+    } deriving (Show, Eq)
 
 prWire n c = concat ["r", show c, show n]
 
@@ -44,7 +45,7 @@ prGate (Gate (li,ri)(lo,ro)) i = concat [ "(", prOutWire lo L i, ", ", prOutWire
                                         ]
 
 delayWires gates = map delayWire delayedWires
-    where delayedWires = filter delayed (leftOutputs ++ rightOutputs)
+    where delayedWires = nub $ filter delayed (leftOutputs ++ rightOutputs)
           (leftOutputs, rightOutputs) = unzip $ map (\(Gate out _) -> out) gates
           delayed (GateConn _ _ Delay) = True
           delayed _ = False
