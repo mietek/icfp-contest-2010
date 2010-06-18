@@ -107,10 +107,11 @@ serverOutput1 = "02120112100002120"
 serverOutput2 = "22120221022022120"
 serverOutput3 = "01210221200001210"
 serverOutput4 = "22022022022022022"
-test1 = run config1 serverInput == serverOutput1
-test2 = run config2 serverInput == serverOutput2
-test3 = run config3 serverInput == serverOutput3
-test4 = run config4 serverInput == serverOutput4
+testServer1 = run config1 serverInput == serverOutput1
+testServer2 = run config2 serverInput == serverOutput2
+testServer3 = run config3 serverInput == serverOutput3
+testServer4 = run config4 serverInput == serverOutput4
 
 taskInput  = "02222220210110011"
-taskOutput = run sample taskInput
+taskOutput = "11021210112101221"
+testTask = run sample taskInput == taskOutput
