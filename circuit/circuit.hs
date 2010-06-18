@@ -4,6 +4,7 @@ module Main where
 import Text.ParserCombinators.Parsec
 import Data.Char
 import Control.Applicative hiding ((<|>), many)
+import Control.Monad
 import Array
 import System.Environment
 import System.Exit
@@ -65,11 +66,11 @@ skipWhiteSpace = many whiteSpace
 pConn =  (char 'L' >> return L)
      <|> (char 'R' >> return R)
 
-pNumber = foldl foo 0 <$> many1 digit
+pNumber = foldl foo 0 `liftM` many1 digit
     where foo x y = 10*x + digitToInt y
 
 pWire defaultDelay =  (char 'X' >> return External)
-                  <|> GateConn <$> pNumber <*> pConn <*> return defaultDelay
+                  <|> (liftM3 GateConn pNumber pConn $ return defaultDelay)
 
 pGate = do
   let pWire' = pWire $ error "default, tmp delay"
