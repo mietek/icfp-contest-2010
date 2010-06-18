@@ -107,15 +107,16 @@ run :: Circuit -> String -> String
 run c s = concatMap show (F.run c (map (read . return) s))
 
 
-input = "01202101210201202"
-output1 = "02120112100002120"
-output2 = "22120221022022120"
-output3 = "01210221200001210"
-output4 = "22022022022022022"
-test1 = run config1 input == output1
-test2 = run config2 input == output2
-test3 = run config3 input == output3
-test4 = run config4 input == output4
+serverInput   = "01202101210201202"
+serverOutput1 = "02120112100002120"
+serverOutput2 = "22120221022022120"
+serverOutput3 = "01210221200001210"
+serverOutput4 = "22022022022022022"
+testServer1 = run config1 serverInput == serverOutput1
+testServer2 = run config2 serverInput == serverOutput2
+testServer3 = run config3 serverInput == serverOutput3
+testServer4 = run config4 serverInput == serverOutput4
 
-realInput = "02222220210110011"
-realOutput = run sample realInput
+taskInput  = "02222220210110011"
+taskOutput = "11021210112101221"
+testTask = run sample taskInput == taskOutput
