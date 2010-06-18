@@ -28,10 +28,10 @@ data Circuit = Circuit
 
 prWire n c = concat ["r", show c, show n]
 
-prInWire External = "out"
+prInWire External = "inp"
 prInWire (GateConn n c d) = prWire n c ++ primeDelay d
 
-prOutWire External _ _ = "inp"
+prOutWire External _ _ = "out"
 prOutWire _ c i = prWire i c
 
 primeDelay Delay = "'"
