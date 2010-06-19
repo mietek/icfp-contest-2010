@@ -272,7 +272,7 @@ genDodaj m c inp out k = p1 ++ inp ++ (show (c+lp1 -3) ++ "L") ++ "0#" ++ out ++
 
 
 compGenDodaj m inp out ((a,b):xs) =
-    genDodaj m a inp "105L" b ++
+    genDodaj m a inp x b ++
 {-    fst (foldl (\(r,f) (k,(x,y)) -> (r ++ genDodaj x (f x) (show (k-1)++"L") y,\z ->
                                      if y == 0 then show z ++ "R" else show (z-1) ++ "L"))
          ([],\x -> show x ++ "R") (zip (map (53*) [3..]) $ init xs)) -}
@@ -280,3 +280,4 @@ compGenDodaj m inp out ((a,b):xs) =
     genDodaj m c (show (c-1) ++ "L") out d
   where (c,d)= last xs
         len = length . lines $ genDodaj m 0 "" "" (m-1)
+        x = show (2 * len -1) ++ "L"
