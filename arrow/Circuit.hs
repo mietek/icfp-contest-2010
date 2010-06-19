@@ -246,7 +246,6 @@ genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
               (concat [generujFoo k (show (k-3)++"L") (show (k+4) ++ "L") | k <- map ((c+).(3*)) [1..(n-2)]]) ++
               generujFoo (c+3*(n-1)) ((show $ c + (n-1) * 3 - 3) ++"L") out
 
-
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
 
 genP m c inp out 0 = genFooToN c inp (show (c+m *3) ++  "R") m ++
@@ -270,7 +269,7 @@ compGenDodaj c m inp out ((a,b):xs) =
 {-    fst (foldl (\(r,f) (k,(x,y)) -> (r ++ genDodaj x (f x) (show (k-1)++"L") y,\z ->
                                      if y == 0 then show z ++ "R" else show (z-1) ++ "L"))
          ([],\x -> show x ++ "R") (zip (map (53*) [3..]) $ init xs)) -}
-    concat [ genDodaj m x (show (c+x-1) ++ "L") (show (c+k-1)++"L")  y | (k,(x,y)) <- zip (map (len*) [3..]) $ init xs] ++
+    concat [ genDodaj m (c+x) (show (c+x-1) ++ "L") (show (c+k-1)++"L")  y | (k,(x,y)) <- zip (map (len*) [3..]) $ init xs] ++
     genDodaj m e (show (c+e-1) ++ "L") out d
   where (e,d)= last xs
         len = length . lines $ genDodaj m 0 "" "" (m-1)
