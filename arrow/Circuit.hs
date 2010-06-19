@@ -271,7 +271,7 @@ genDodaj c inp out k = p1 ++ inp ++ (show (lp1 -2) ++ "L") ++ "0#" ++ out ++ (sh
 
 
 compGenDodaj inp out ((a,b):xs) =
-    genDodaj a inp "105L" b ++ "..."  ++
+    genDodaj a inp "105L" b ++
     concat [ genDodaj x (show (x-1) ++ "L") (show (k-1)++"L")  y | (k,(x,y)) <- zip (map (53*) [3..]) $ init xs] ++
     genDodaj c (show (c-1) ++ "L") out d
   where (c,d)= last xs
