@@ -280,29 +280,17 @@ compFooDodaj m c inp out  k inps =
   where l = 3 * k
 
 
-mkFactory str = ("1L:\n" ++ )$ showFactory $
-     compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
-  where l = length str + 17
-        showFactory l = let len = length $ lines l
-                        in (++(show (len -1 ) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
-
-main = putStrLn . mkFactory . head =<< getArgs
-{-
-=======
-mkFactory :: String -> String
-mkFactory fuel =
-  let l = length taskOutput + (length fuel) in
-      compFooDodaj l 0 "X" "X" l $ wejscia l ['0' | x <- [1 .. l]] (taskOutput ++ fuel)
-
 isTrit :: Char -> Bool
 isTrit '0' = True
 isTrit '1' = True
 isTrit '2' = True
 isTrit _ = False
 
-main :: IO ()
-main = do
-  fuel <- fmap (filter isTrit) getContents
-  putStrLn (mkFactory fuel)
->>>>>>> dddeb8a286f2a5d0d7d33fdf97002095b3e520e6
--}
+mkFactory :: String -> String
+mkFactory str =
+  ("1L:\n" ++) $ showFactory $ compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
+  where l = length str + (length taskOutput)
+        showFactory l = let len = length $ lines l
+                        in (++ (show (len - 1) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
+
+main = putStrLn . mkFactory . filter isTrit . head =<< getArgs

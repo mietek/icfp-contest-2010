@@ -1,4 +1,7 @@
 all: circuit
 
 circuit: Circuit.hs
-	ghc --make -Wall -O2 -o circuit Circuit.hs
+	ghc --make -O2 -o circuit Circuit.hs
+
+clean:
+	rm -f circuit Circuit.hi Circuit.o Filter.hi Filter.o
