@@ -255,26 +255,28 @@ testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
 
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
 
-genP1 c inp out 0 = genFooToN c inp (show (c+17 *3) ++  "R") 17 ++
-                    genFoo2t (c+17*3) (show (c+(17) * 3 - 3) ++ "L") out
-genP1 c inp out k = genFooToN c inp (show (c + (17-k) *3) ++  "R") (17-k) ++
-                    genFoo2t (c + (17-k)*3) (show (c + (17-k) * 3 - 3) ++ "L") (show (c +(17-k)*3+2) ++ "L") ++
-                    genFooToN (c + (17-k)*3 +1) (show (c + (17-k)*3) ++ "R") out k
+genP m c inp out 0 = genFooToN c inp (show (c+m *3) ++  "R") m ++
+                     genFoo2t (c+m*3) (show (c+m * 3 - 3) ++ "L") out
+genP m c inp out k = genFooToN c inp (show (c + (m-k) *3) ++  "R") (m-k) ++
+                     genFoo2t (c + (m-k)*3) (show (c + (m-k) * 3 - 3) ++ "L") (show (c +(m-k)*3+2) ++ "L") ++
+                     genFooToN (c + (m-k)*3 +1) (show (c + (m-k)*3) ++ "R") out k
+
+genP1 = genP 17
+
+genDodaj m c inp out 0 = p1 ++ inp ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
+    where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") 0
+          lp1 = length $ lines $ genP m 0 "" "" 0
+genDodaj m c inp out k = p1 ++ inp ++ (show (c+lp1 -3) ++ "L") ++ "0#" ++ out ++ (show (c +1)++"L") ++ ",\n"
+    where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") k
+          lp1 = length $ lines $ genP m 0 "" "" k
 
 
-genDodaj c inp out 0 = p1 ++ inp ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
-    where p1 = genP1 c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") 0
-          lp1 = length $ lines $ genP1 0 "" "" 0
-genDodaj c inp out k = p1 ++ inp ++ (show (c+lp1 -3) ++ "L") ++ "0#" ++ out ++ (show (c +1)++"L") ++ ",\n"
-    where p1 = genP1 c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") k
-          lp1 = length $ lines $ genP1 0 "" "" k
-
-
-compGenDodaj inp out ((a,b):xs) =
-    genDodaj a inp "105L" b ++
+compGenDodaj m inp out ((a,b):xs) =
+    genDodaj m a inp "105L" b ++
 {-    fst (foldl (\(r,f) (k,(x,y)) -> (r ++ genDodaj x (f x) (show (k-1)++"L") y,\z ->
                                      if y == 0 then show z ++ "R" else show (z-1) ++ "L"))
          ([],\x -> show x ++ "R") (zip (map (53*) [3..]) $ init xs)) -}
-    concat [ genDodaj x (show (x-1) ++ "L") (show (k-1)++"L")  y | (k,(x,y)) <- zip (map (53*) [3..]) $ init xs] ++
-    genDodaj c (show (c-1) ++ "L") out d
+    concat [ genDodaj m x (show (x-1) ++ "L") (show (k-1)++"L")  y | (k,(x,y)) <- zip (map (len*) [3..]) $ init xs] ++
+    genDodaj m c (show (c-1) ++ "L") out d
   where (c,d)= last xs
+        len = length . lines $ genDodaj m 0 "" "" (m-1)
