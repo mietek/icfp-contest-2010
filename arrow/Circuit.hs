@@ -274,3 +274,7 @@ compGenDodaj m inp out ((a,b):xs) =
   where (c,d)= last xs
         len = length . lines $ genDodaj m 0 "" "" (m-1)
         x = show (2 * len -1) ++ "L"
+
+compFooDodaj m c inp out  k inps =
+    genFooToN c inp (show (l +1) ++ "L") k ++ compGenDodaj m (show (l -2) ++"L") out inps
+  where l = 3 * k
