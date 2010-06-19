@@ -7,7 +7,7 @@ import Control.Arrow
 import qualified Control.Arrow as C
 import Filter hiding (step, run)
 import qualified Filter as F
-
+import System.Environment (getArgs)
 
 data Trit = T0 | T1 | T2
   deriving (Enum, Eq)
@@ -278,3 +278,12 @@ compGenDodaj c m inp out ((a,b):xs) =
 compFooDodaj m c inp out  k inps =
     genFooToN c inp (show (l + m * 3 + 1) ++ "L") k ++ compGenDodaj l m (show (l -3) ++"L") out inps
   where l = 3 * k
+
+
+mkFactory str = ("1L:" ++ )$ showFactory $
+     compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
+  where l = length str + 17
+        showFactory l = let len = length $ lines l
+                        in (++(show (len -1 ) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
+
+main = putStr . mkFactory . head =<< getArgs
