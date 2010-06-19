@@ -1,6 +1,6 @@
 {-# LANGUAGE Arrows #-}
 
-module Circuit where
+module Main where
 
 import Control.Arrow (returnA)
 import Control.Arrow
@@ -278,3 +278,20 @@ compGenDodaj c m inp out ((a,b):xs) =
 compFooDodaj m c inp out  k inps =
     genFooToN c inp (show (l + m * 3 + 1) ++ "L") k ++ compGenDodaj l m (show (l -3) ++"L") out inps
   where l = 3 * k
+
+
+mkFactory :: String -> String
+mkFactory fuel =
+  let l = length taskOutput + (length fuel) in
+      compFooDodaj l 0 "X" "X" l $ wejscia l ['0' | x <- [1 .. l]] (taskOutput ++ fuel)
+
+isTrit :: Char -> Bool
+isTrit '0' = True
+isTrit '1' = True
+isTrit '2' = True
+isTrit _ = False
+
+main :: IO ()
+main = do
+  fuel <- fmap (filter isTrit) getContents
+  putStrLn (mkFactory fuel)
