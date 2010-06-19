@@ -253,9 +253,14 @@ testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
 
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
 
-genP1 inp out 0 = genFooToN 0 inp (show (17 *3) ++  "R") 17 ++
-                  genFoo2t (17*3) (show ((17) * 3 - 3) ++ "L") out
-genP1 inp out k = genFooToN 0 inp (show ((17-k) *3) ++  "R") (17-k) ++
-                  genFoo2t ((17-k)*3) (show ((17-k) * 3 - 3) ++ "L") (show ((17-k)*3+2) ++ "L") ++
-                  genFooToN ((17-k)*3 +1) (show ((17-k)*3) ++ "R") out k
+genP1 c inp out 0 = genFooToN c inp (show (c+17 *3) ++  "R") 17 ++
+                    genFoo2t (c+17*3) (show (c+(17) * 3 - 3) ++ "L") out
+genP1 c inp out k = genFooToN c inp (show (c + (17-k) *3) ++  "R") (17-k) ++
+                    genFoo2t (c + (17-k)*3) (show (c + (17-k) * 3 - 3) ++ "L") (show (c +(17-k)*3+2) ++ "L") ++
+                    genFooToN (c + (17-k)*3 +1) (show (c + (17-k)*3) ++ "R") out k
 
+
+genDodaj c inp out 0 = inp ++ (show (c + 1)++"L") ++ "0#" ++ out ++ (show (length p1) ++ "R") ++  p1
+    where p1 = genP1 (c+1) (show c ++ "R") (show c ++"R") 0
+genDodaj c inp out k = inp ++ (show (c + 1)++"L") ++ "0#" ++ out ++ (show (length p1 -2) ++ "R") ++ p1
+    where p1 = genP1 (c+1) (show c ++ "R") (show c ++"R") k
