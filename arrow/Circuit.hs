@@ -239,9 +239,9 @@ generujFoo k inLine outLine =
 
 -- n >= 2
 
-genFooToN c inp out n = generujFoo c inp (show (c+3)++"L") ++
-              (concat [generujFoo k (show (k-1)++"L") (show (k+3) ++ "L") | k <- map (3*) [c+1..(n-2)]]) ++
-              generujFoo (3*(n-1))((show $ (n-1) * 3 - 1) ++"L") out
+genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
+              (concat [generujFoo k (show (k-3)++"L") (show (k+4) ++ "L") | k <- map (3*) [c+1..(n-2)]]) ++
+              generujFoo (3*(n-1))((show $ (n-1) * 3 - 3) ++"L") out
 
 testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
 
