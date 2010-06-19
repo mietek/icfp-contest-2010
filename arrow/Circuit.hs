@@ -280,13 +280,13 @@ compFooDodaj m c inp out  k inps =
   where l = 3 * k
 
 
-mkFactory str = ("1L:" ++ )$ showFactory $
+mkFactory str = ("1L:\n" ++ )$ showFactory $
      compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
   where l = length str + 17
         showFactory l = let len = length $ lines l
                         in (++(show (len -1 ) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
 
-main = putStr . mkFactory . head =<< getArgs
+main = putStrLn . mkFactory . head =<< getArgs
 {-
 =======
 mkFactory :: String -> String
