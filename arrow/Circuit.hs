@@ -256,10 +256,10 @@ genP m c inp out k = genFooToN c inp (show (c + (m-k) *3) ++  "R") (m-k) ++
 
 genP1 = genP 17
 
-genDodaj m c inp out 0 = p1 ++ inp ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
+genDodaj m c inp out 0 = p1 ++ (inp) ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
     where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") 0
           lp1 = length $ lines $ genP m 0 "" "" 0
-genDodaj m c inp out k = p1 ++ inp ++ (show (c+lp1 -3) ++ "L") ++ "0#" ++ out ++ (show (c +1)++"L") ++ ",\n"
+genDodaj m c inp out k = p1 ++ (inp) ++ (show (c+lp1 -3) ++ "L") ++ "0#" ++ out ++ (show (c +1)++"L") ++ ",\n"
     where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") k
           lp1 = length $ lines $ genP m 0 "" "" k
 
@@ -270,10 +270,10 @@ compGenDodaj c m inp out ((a,b):xs) =
                                      if y == 0 then show z ++ "R" else show (z-1) ++ "L"))
          ([],\x -> show x ++ "R") (zip (map (53*) [3..]) $ init xs)) -}
     concat [ genDodaj m (c+x) (show (c+x-1) ++ "L") (show (c+k-1)++"L")  y | (k,(x,y)) <- zip (map (len*) [3..]) $ init xs] ++
-    genDodaj m e (show (c+e-1) ++ "L") out d
+    genDodaj m (c+e) (show (c+e-1) ++ "L") out d
   where (e,d)= last xs
         len = length . lines $ genDodaj m 0 "" "" (m-1)
-        x = show (2 * len -1) ++ "L"
+        x = show (c + 2 * len -1) ++ "L"
 
 compFooDodaj m c inp out  k inps =
     genFooToN c inp (show (l + m * 3 + 1) ++ "L") k ++ compGenDodaj l m (show (l -3) ++"L") out inps
