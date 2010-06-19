@@ -1,6 +1,6 @@
 {-# LANGUAGE Arrows #-}
 
-module Circuit where
+module Main where
 
 import Control.Arrow (returnA)
 import Control.Arrow
@@ -280,6 +280,7 @@ compFooDodaj m c inp out  k inps =
   where l = 3 * k
 
 
+<<<<<<< HEAD
 mkFactory str = ("1L:" ++ )$ showFactory $
      compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
   where l = length str + 17
@@ -287,3 +288,22 @@ mkFactory str = ("1L:" ++ )$ showFactory $
                         in (++(show (len -1 ) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
 
 main = putStr . mkFactory . head =<< getArgs
+{-
+=======
+mkFactory :: String -> String
+mkFactory fuel =
+  let l = length taskOutput + (length fuel) in
+      compFooDodaj l 0 "X" "X" l $ wejscia l ['0' | x <- [1 .. l]] (taskOutput ++ fuel)
+
+isTrit :: Char -> Bool
+isTrit '0' = True
+isTrit '1' = True
+isTrit '2' = True
+isTrit _ = False
+
+main :: IO ()
+main = do
+  fuel <- fmap (filter isTrit) getContents
+  putStrLn (mkFactory fuel)
+>>>>>>> dddeb8a286f2a5d0d7d33fdf97002095b3e520e6
+-}
