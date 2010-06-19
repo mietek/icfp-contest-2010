@@ -280,7 +280,6 @@ compFooDodaj m c inp out  k inps =
   where l = 3 * k
 
 
-<<<<<<< HEAD
 mkFactory str = ("1L:" ++ )$ showFactory $
      compFooDodaj l 0 "X" "X" l $ wejscia l (replicate l '0') (taskOutput ++ str)
   where l = length str + 17
