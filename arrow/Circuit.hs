@@ -192,7 +192,7 @@ arcs T2 T2 = [((T0, T2), (T1, T2)),
               ((T2, T0), (T2, T2))]
 
 
-p1 k = (foo ^^^ (17-k)) >>> foo2 >>> (foo ^^^ k)
+p1 k = (foo ^^^ (17-k)) >>> foo2t >>> (foo ^^^ k)
 
 -- ciag k zer i 17-k jedynek
 ciag01 k = (take  k ['0' | x <- [0..]]) ++ (take (17-k) ['1' | x <- [1..]])
@@ -249,3 +249,4 @@ testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
 --      (rL0, rL2) <- gate -< (inp, rR1')
 --      (rR0, rR1) <- gate -< (rL2, rR2)
 
+-- putStr $ genFooToN 0 "X" "X" 17
