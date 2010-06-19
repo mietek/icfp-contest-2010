@@ -75,12 +75,12 @@ config3 = proc x -> do
 -- przesun o 1
 foo = proc inp -> do
   rec
-      rL1' <- delay T0 -< rL1
-      rL2' <- delay T0 -< rL2
-      rR2' <- delay T0 -< rR2
-      (rL1, rR0) <- gate -< (inp, rL2')
-      (out, rR1) <- gate -< (rL1', rR2')
-      (rL2, rR2) <- gate -< (rR0, rR1)
+      rL0' <- delay T0 -< rL0
+      rR1' <- delay T0 -< rR1
+      rR0' <- delay T0 -< rR0
+      (out, rR2) <- gate -< (rL0', rR0')
+      (rL0, rL2) <- gate -< (inp, rR1')
+      (rR0, rR1) <- gate -< (rL2, rR2)
   returnA -< out
 -- 02*  
 foo1t = proc inp -> do
@@ -224,3 +224,22 @@ generuj x y k = take (mehInt (ujmijChar y x)) [ ciag01 k | x <- [0..]]
 znajdz x y = szukaj x y 0
 
 testZnajdz = taskOutput == foldr dodaj taskInput (znajdz taskInput taskOutput) 
+
+
+-- generowanie podbramek
+--- podbramka to funkcja z numeru linii wejœcia i wyjœcia w bramkê
+
+generujFoo k inLine outLine = 
+    (show (k+1))++"L"++(show (k+2))++"R0#"
+	++outLine++(show (k+2))++"R,\n"
+	++inLine ++ (show (k+2))++"L0#"
+	++(show (k))++"L"++(show (k+2))++"L,\n"
+	++(show (k+1))++"R"++(show (k))++"R0#"
+	++(show (k+1))++"R"++(show (k))++"R,\n"
+
+testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
+	
+--      (out, rR2) <- gate -< (rL0', rR0')
+--      (rL0, rL2) <- gate -< (inp, rR1')
+--      (rR0, rR1) <- gate -< (rL2, rR2)
+
