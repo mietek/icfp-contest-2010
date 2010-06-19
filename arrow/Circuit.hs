@@ -192,7 +192,7 @@ arcs T2 T2 = [((T0, T2), (T1, T2)),
               ((T2, T0), (T2, T2))]
 
 
-p1 k = (foo ^^^ (17-k)) >>> foo2 >>> (foo ^^^ k)
+p1 k = (foo ^^^ (17-k)) >>> foo2t >>> (foo ^^^ k)
 
 -- ciag k zer i 17-k jedynek
 ciag01 k = (take  k ['0' | x <- [0..]]) ++ (take (17-k) ['1' | x <- [1..]])
@@ -253,3 +253,4 @@ genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",
 genP1 k = genFooToN 0 "X" (show ((17-k) *3 +1) ++  "L") (17-k) ++
           genFoo2t ((17-k) * 3 +1) (show ((17-k) * 3 - 2) ++ "L") (show ((17-k)*3 + 1 + 2) ++ "L") ++
           genFooToN ((17-k)*3 +1) (show ((17-k)*3 +1) ++ "L") "X" k
+
