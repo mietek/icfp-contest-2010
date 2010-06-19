@@ -262,9 +262,9 @@ genP1 c inp out k = genFooToN c inp (show (c + (17-k) *3) ++  "R") (17-k) ++
                     genFooToN (c + (17-k)*3 +1) (show (c + (17-k)*3) ++ "R") out k
 
 
-genDodaj c inp out 0 = inp ++ (show (c + 1)++"L") ++ "0#" ++ out ++ (show lp1 ++ "R") ++ ",\n" ++  p1
+genDodaj c inp out 0 = inp ++ (show lp1 ++ "R") ++ "0#" ++ out ++  (show (c + 2)++"L") ++ ",\n" ++  p1
     where p1 = genP1 (c+1) (show c ++ "R") (show c ++"R") 0
           lp1 = length $ lines $ p1
-genDodaj c inp out k = inp ++ (show (c + 1)++"L") ++ "0#" ++ out ++ (show (lp1 -2) ++ "R") ++ ",\n" ++ p1
+genDodaj c inp out k = inp ++ (show (lp1 -2) ++ "L") ++ "0#" ++ out ++ (show (c +2)++"L")  ++ ",\n" ++ p1
     where p1 = genP1 (c+1) (show c ++ "R") (show c ++"R") k
           lp1 = length $ lines $ p1
