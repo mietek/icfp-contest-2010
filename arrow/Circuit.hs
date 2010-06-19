@@ -277,5 +277,5 @@ compGenDodaj c m inp out ((a,b):xs) =
         x = show (2 * len -1) ++ "L"
 
 compFooDodaj m c inp out  k inps =
-    genFooToN c inp (show (l + m * 3 + 1) ++ "C") k ++ compGenDodaj l m (show (l -3) ++"W") out inps
+    genFooToN c inp (show (l + m * 3 + 1) ++ "L") k ++ compGenDodaj l m (show (l -3) ++"L") out inps
   where l = 3 * k
