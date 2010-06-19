@@ -23,9 +23,6 @@ instance Num Trit where
 
 toTrit f x y  = toEnum $ (fromEnum x `f` fromEnum y) `mod` 3
 
-x ^^^ 1 = x
-x ^^^ k = x >>> (x^^^(k-1))
-
 instance Show Trit where
   show = show . fromEnum
 
@@ -72,28 +69,6 @@ config3 = proc x -> do
   rec r <- delay T0 -< r'
       (y, r') <- gate -< (r, x)
   returnA -< y
--- przesun o 1
-foo = proc inp -> do
-  rec
-      rL0' <- delay T0 -< rL0
-      rR1' <- delay T0 -< rR1
-      rR0' <- delay T0 -< rR0
-      (out, rR2) <- gate -< (rL0', rR0')
-      (rL0, rL2) <- gate -< (inp, rR1')
-      (rR0, rR1) <- gate -< (rL2, rR2)
-  returnA -< out
--- 02*
-foo1t = proc inp -> do
-  rec
-      rR0' <- delay T0 -< rR0
-      (out, rR0) <- gate -< (inp, rR0')
-  returnA -< out
-
-foo2t = proc inp -> do
-  rec
-      rR0' <- delay T0 -< rR0
-      (rR0, out) <- gate -< (rR0', inp)
-  returnA -< out
 
 config4 :: Circuit
 config4 = proc x -> do
@@ -161,11 +136,6 @@ taskInput  = "02222220210110011"
 taskOutput = "11021210112101221"
 taskInputq  = "00000000000000000"
 testTask = run sample taskInput == taskOutput
-foo17 = foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo
-
-foo1 = foo17 >>> foo1t
-foo2 = foo17 >>> foo2t
-
 
 arcs :: Trit -> Trit -> [((Trit, Trit), (Trit, Trit))]
 arcs T0 T0 = [((T0, T0), (T0, T2))]
@@ -191,11 +161,33 @@ arcs T2 T2 = [((T0, T2), (T1, T2)),
               ((T1, T2), (T2, T1)),
               ((T2, T0), (T2, T2))]
 
+-- kod jami
 
-p1 k = (foo ^^^ (17-k)) >>> foo2t >>> (foo ^^^ k)
+x ^^^ 1 = x
+x ^^^ k = x >>> (x^^^(k-1))
 
--- ciag k zer i 17-k jedynek
-ciag01 k = (take  k ['0' | x <- [0..]]) ++ (take (17-k) ['1' | x <- [1..]])
+-- przesun o 1
+foo = proc inp -> do
+  rec
+      rL0' <- delay T0 -< rL0
+      rR1' <- delay T0 -< rR1
+      rR0' <- delay T0 -< rR0
+      (out, rR2) <- gate -< (rL0', rR0')
+      (rL0, rL2) <- gate -< (inp, rR1')
+      (rR0, rR1) <- gate -< (rL2, rR2)
+  returnA -< out
+-- 02*
+foo1t = proc inp -> do
+  rec
+      rR0' <- delay T0 -< rR0
+      (out, rR0) <- gate -< (inp, rR0')
+  returnA -< out
+
+foo2t = proc inp -> do
+  rec
+      rR0' <- delay T0 -< rR0
+      (rR0, out) <- gate -< (rR0', inp)
+  returnA -< out
 
 -- czyste lenistwo
 mehInt '0' = 0
@@ -213,19 +205,18 @@ dodaj [] [] = []
 dodaj (c1:cs) (c2:cs2) = (dodajChar c1 c2): (dodaj cs cs2)
 
 -- wyszukiwanie potrzebnych bramek jesli tylko dodajemy
-szukaj :: String -> String -> Int -> [String]
-szukaj [] [] _ = []
-szukaj (x:xs) (y:ys) k =  gs ++ (szukaj zs ys (k+1))
-    where gs = generuj x y k
+szukaj _ [] [] _ = []
+szukaj m (x:xs) (y:ys) k =  gs ++ (szukaj m zs ys (k+1))
+    where gs = generuj m x y k
           zs = foldl dodaj xs (map (drop (k+1)) gs)
 
-generuj x y k = take (mehInt (ujmijChar y x)) [ ciag01 k | x <- [0..]]
+generuj m x y k = take (mehInt (ujmijChar y x)) [ ciag01 m k | x <- [0..]]
 
-znajdz x y = szukaj x y 0
+znajdz m x y = szukaj m x y 0
 
-korekta x y =  map sum $ map (map mehInt) $ znajdz x y
-wejscia x y = zip (map (53*) [0..]) (map (17-) (korekta x y))
-testZnajdz = taskOutput == foldr dodaj taskInput (znajdz taskInput taskOutput)
+korekta m x y =  map sum $ map (map mehInt) $ znajdz m x y
+wejscia m x y = zip (map ((3*m)*) [0..]) (map (m-) (korekta m x y))
+testZnajdz = taskOutput == foldr dodaj taskInput (znajdz 17 taskInput taskOutput)
 
 
 -- generowanie podbramek
@@ -239,6 +230,13 @@ generujFoo k inLine outLine =
 	++(show (k+1))++"R"++(show (k))++"R0#"
 	++(show (k+1))++"R"++(show (k))++"R,\n"
 
+p1 k m = (foo ^^^ (m-k)) >>> foo2t >>> (foo ^^^ k)
+
+-- ciag k zer i m-k jedynek
+ciag01 m k= (take  k ['0' | x <- [0..]]) ++ (take (m-k) ['1' | x <- [1..]])
+
+
+-- kod maka
 -- n >= 2
 
 genFooToN _ _ _ 0 = ""
@@ -247,11 +245,6 @@ genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
               (concat [generujFoo k (show (k-3)++"L") (show (k+4) ++ "L") | k <- map ((c+).(3*)) [1..(n-2)]]) ++
               generujFoo (c+3*(n-1)) ((show $ c + (n-1) * 3 - 3) ++"L") out
 
-testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
-
---      (out, rR2) <- gate -< (rL0', rR0')
---      (rL0, rL2) <- gate -< (inp, rR1')
---      (rR0, rR1) <- gate -< (rL2, rR2)
 
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
 
