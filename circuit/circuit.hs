@@ -132,6 +132,39 @@ showTernaryStream = map f
 evalCircuit :: Circuit -> [Trit] -> [Trit]
 evalCircuit = undefined
 
+emptyGate = Gate (External,External) (External,External)
+
+arraySize t = 1 + snd (bounds t)
+
+shiftCircuit n c = Circuit (shiftGates n $ cGates c) (shiftWire n $ cInput c) (shiftWire n $ cOutput c)
+shiftGates n gs = array (0,n + arraySize gs - 1) $ [(i+n, shiftGate n (gs ! i)) | i <- [0..arraySize gs - 1]]
+                                                    ++ [(i,emptyGate) | i <- [0..n-1]]
+shiftGate n (Gate (a,b) (c,d)) = Gate (shiftWire n a, shiftWire n b) (shiftWire n c, shiftWire n d)
+shiftWire _ External = External
+shiftWire k (GateConn n c d) = GateConn (n + k) c d
+
+
+combineCircuits :: Circuit -> Circuit -> Circuit
+combineCircuits c1 c2 = Circuit gates3 inp out
+    where
+      Circuit gates1 inp (GateConn outN1 outC1 _) = c1
+      Gate outC1inp (outC1L, outC1R)  = gates1 ! outN1
+      out1' = Gate outC1inp $ if outC1 == L then (inpC2shifted, outC1R) else (outC1L, inpC2shifted)
+      gates1' = gates1 // [(outN1, out1')]
+      shift = arraySize gates1
+      inpC2shifted = cInput $ shiftCircuit shift c2
+      Circuit gates2 (GateConn inpN2 inpC2 _) out = shiftCircuit shift c2
+      Gate (inpC2L, inpC2R) outC2out = gates2 ! inpN2
+      inp2' = Gate (if inpC2 == L then (cOutput c1, inpC2R) else (inpC2L, cOutput c1)) outC2out
+      gates2' = gates2 // [(inpN2, inp2')]
+      finalSize = arraySize gates1 + arraySize gates2' - 1
+      gates3 = gates2' // [(i,gates1' ! i) | i <- [0..arraySize gates1' - 1]]
+
+
+
+
+
+
 main :: IO ()
 main = do
   args <- getArgs
