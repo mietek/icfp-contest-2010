@@ -3,7 +3,7 @@
 module Circuit where
 
 import Control.Arrow (returnA)
-
+import Control.Arrow
 import Filter hiding (step, run)
 import qualified Filter as F
 
@@ -22,6 +22,9 @@ instance Num Trit where
   fromInteger 2 = T2
 
 toTrit f x y  = toEnum $ (fromEnum x `f` fromEnum y) `mod` 3
+
+x ^^^ 1 = x
+x ^^^ k = x >>> (x^^^(k-1))
 
 instance Show Trit where
   show = show . fromEnum
@@ -69,6 +72,28 @@ config3 = proc x -> do
   rec r <- delay T0 -< r'
       (y, r') <- gate -< (r, x)
   returnA -< y
+-- przesun o 1
+foo = proc inp -> do
+  rec
+      rL1' <- delay T0 -< rL1
+      rL2' <- delay T0 -< rL2
+      rR2' <- delay T0 -< rR2
+      (rL1, rR0) <- gate -< (inp, rL2')
+      (out, rR1) <- gate -< (rL1', rR2')
+      (rL2, rR2) <- gate -< (rR0, rR1)
+  returnA -< out
+-- 02*  
+foo1t = proc inp -> do
+  rec
+      rR0' <- delay T0 -< rR0
+      (out, rR0) <- gate -< (inp, rR0')
+  returnA -< out
+  
+foo2t = proc inp -> do
+  rec
+      rR0' <- delay T0 -< rR0
+      (rR0, out) <- gate -< (rR0', inp)
+  returnA -< out
 
 config4 :: Circuit
 config4 = proc x -> do
@@ -76,6 +101,12 @@ config4 = proc x -> do
       (r', y) <- gate -< (r, x)
   returnA -< y
 
+mietek1 :: Circuit
+mietek1 = proc x -> do
+  rec r <- delay T0 -< r'
+      (r', y) <- gate -< (r, x)
+  returnA -< y
+  
 sample :: Circuit
 sample = proc xili19 -> do
   rec ro9li2  <- delay T0 -< ro9li2'
@@ -128,7 +159,12 @@ testServer4 = run config4 serverInput == serverOutput4
 
 taskInput  = "02222220210110011"
 taskOutput = "11021210112101221"
+taskInputq  = "00000000000000000"
 testTask = run sample taskInput == taskOutput
+foo17 = foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo >>> foo
+
+foo1 = foo17 >>> foo1t
+foo2 = foo17 >>> foo2t
 
 
 arcs :: Trit -> Trit -> [((Trit, Trit), (Trit, Trit))]
@@ -154,3 +190,6 @@ arcs T2 T1 = [((T0, T2), (T1, T2)),
 arcs T2 T2 = [((T0, T2), (T1, T2)),
               ((T1, T2), (T2, T1)),
               ((T2, T0), (T2, T2))]
+
+
+p1 k = (foo ^^^ (17-k)) >>> foo2 >>> (foo ^^^ k)
