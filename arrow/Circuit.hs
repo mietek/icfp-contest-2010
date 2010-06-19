@@ -268,3 +268,10 @@ genDodaj c inp out 0 = p1 ++ inp ++ (show lp1 ++ "R") ++ "0#" ++ out ++  (show (
 genDodaj c inp out k = p1 ++ inp ++ (show (lp1 -2) ++ "L") ++ "0#" ++ out ++ (show (c +1)++"L") ++ ",\n"
     where p1 = genP1 c (show lp1 ++ "R") (show lp1 ++"R") k
           lp1 = length $ lines $ genP1 0 "" "" k
+
+
+compGenDodaj inp out ((a,b):xs) =
+    genDodaj a inp "105L" b ++ "..."  ++
+    concat [ genDodaj x (show (x-1) ++ "L") (show (k-1)++"L")  y | (k,(x,y)) <- zip (map (53*) [3..]) $ init xs] ++
+    genDodaj c (show (c-1) ++ "L") out d
+  where (c,d)= last xs
