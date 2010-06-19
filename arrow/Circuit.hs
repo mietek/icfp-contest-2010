@@ -216,7 +216,7 @@ generuj m x y k = take (mehInt (ujmijChar y x)) [ ciag01 m k | x <- [0..]]
 znajdz m x y = szukaj m x y 0
 
 korekta m x y =  map sum $ map (map mehInt) $ znajdz m x y
-wejscia m x y = zip (map ((3*m)*) [0..]) (map (m-) (korekta m x y))
+wejscia m x y = zip [(3*m+2)*x | x <- [0..]] (map (m-) (korekta m x y))
 testZnajdz = taskOutput == foldr dodaj taskInput (znajdz 17 taskInput taskOutput)
 
 
