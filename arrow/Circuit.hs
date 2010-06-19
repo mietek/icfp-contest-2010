@@ -193,3 +193,34 @@ arcs T2 T2 = [((T0, T2), (T1, T2)),
 
 
 p1 k = (foo ^^^ (17-k)) >>> foo2 >>> (foo ^^^ k)
+
+-- ciag k zer i 17-k jedynek
+ciag01 k = (take  k ['0' | x <- [0..]]) ++ (take (17-k) ['1' | x <- [1..]])
+
+-- czyste lenistwo
+mehInt '0' = 0
+mehInt '1' = 1
+mehInt '2' = 2
+mehStr 0 = '0'
+mehStr 1 = '1'
+mehStr 2 = '2'
+
+dodajChar x y = mehStr $ ((mehInt x) + (mehInt y)) `mod` 3
+ujmijChar x y = mehStr $ ((mehInt x) - (mehInt y)) `mod` 3
+
+-- dodawanie ciagow
+dodaj [] [] = []
+dodaj (c1:cs) (c2:cs2) = (dodajChar c1 c2): (dodaj cs cs2)
+
+-- wyszukiwanie potrzebnych bramek jesli tylko dodajemy
+szukaj :: String -> String -> Int -> [String]
+szukaj [] [] _ = []
+szukaj (x:xs) (y:ys) k =  gs ++ (szukaj zs ys (k+1))
+    where gs = generuj x y k
+          zs = foldl dodaj xs (map (drop (k+1)) gs)
+
+generuj x y k = take (mehInt (ujmijChar y x)) [ ciag01 k | x <- [0..]]
+
+znajdz x y = szukaj x y 0
+
+testZnajdz = taskOutput == foldr dodaj taskInput (znajdz taskInput taskOutput) 
