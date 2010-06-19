@@ -239,6 +239,8 @@ generujFoo k inLine outLine =
 
 -- n >= 2
 
+genFooToN _ _ _ 0 = ""
+genFooToN c inp out 1 = generujFoo c inp out
 genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
               (concat [generujFoo k (show (k-3)++"L") (show (k+4) ++ "L") | k <- map ((c+).(3*)) [1..(n-2)]]) ++
               generujFoo (c+3*(n-1)) ((show $ c + (n-1) * 3 - 3) ++"L") out
@@ -250,7 +252,7 @@ testgenfoo = putStr $ "1L:\n"++(generujFoo 0 "X" "X")++"3L3R0#3L3R:\n0L"
 --      (rR0, rR1) <- gate -< (rL2, rR2)
 
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
-genP1 k = genFooToN 0 "X" (show ((17-k) *3 +3) ++  "L") (17-k) ++
-          genFoo2t ((17-k) * 3 +1) (show ((17-k) * 3 - 2) ++ "L") (show ((17-k)*4) ++ "L") ++
-          genFooToN ((17-k)*3 +1) (show ((17-k)*3 +1) ++ "L") "X" k
+genP1 inp out k = genFooToN 0 inp (show ((17-k) *3 +3) ++  "L") (17-k) ++
+                  genFoo2t ((17-k) * 3 +1) (show ((17-k) * 3 - 2) ++ "L") (show ((17-k)*4) ++ "L") ++
+                  genFooToN ((17-k)*3 +1) (show ((17-k)*3 +1) ++ "L") out k
 
