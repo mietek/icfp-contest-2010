@@ -272,8 +272,8 @@ genDodaj c inp out k = p1 ++ inp ++ (show (lp1 -2) ++ "L") ++ "0#" ++ out ++ (sh
 
 compGenDodaj inp out ((a,b):xs) =
     genDodaj a inp "105L" b ++
-    fst (foldl (\(r,f) (k,(x,y)) -> (r ++ genDodaj x (show (k-1)++"L") (f x) y,\x ->
-                                     if y == 0 then show x ++ "R" else show (x-1) ++ "L"))
+    fst (foldl (\(r,f) (k,(x,y)) -> (r ++ genDodaj x (show (k-1)++"L") (f x) y,\z ->
+                                     if y == 0 then show z ++ "R" else show (z-1) ++ "L"))
          ([],\x -> show x ++ "R") (zip (map (53*) [3..]) $ init xs))
 {-    concat [ genDodaj x z (show (k-1)++"L")  y | (k,(x,y)) <- zip (map (53*) [3..]) $ init xs,
            let z = if y == 0 then (show x ++ "R") else (show (x-1) ++ "L") ] ++ -}
