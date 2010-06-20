@@ -167,7 +167,7 @@ compGenDodaj m (x:xs) = foldl (\c y-> c `combineCircuits` genDodaj m y) c1 xs
 -
 compFooDodaj m k inps = {-(foo ^^^ k)-} finrod `combineCircuits` (compGenDodaj m inps)
 -}
-mkFactory = showCircuit . finishIt . factory . (taskOutput ++)
+mkFactory = showCircuit . finishIt . reverse . factory . (taskOutput ++)
 --compFooDodaj l l $ wejscia l (replicate l '0') (taskOutput ++ str)
  --   where l = length str + (length taskOutput)
 
