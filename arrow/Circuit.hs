@@ -1,6 +1,6 @@
 {-# LANGUAGE Arrows #-}
 
-module Main where
+module Circuit where
 
 import Control.Arrow (returnA)
 import Control.Arrow
