@@ -115,18 +115,18 @@ parse6 nr w e = if ([] == rozw)
   where rozw = [ (v1,v2,v3,v4,v5,v6) | v6 <- [1..30], v5 <- [1..30], v3 <- [1..30], v4 <- [1..30], v2 <- [1..30], v1 <- [1..30], (sprawdzRownania e (v1,v2,v3,v4,v5,v6))]
 
 parse5 nr w e = if ([] == rozw)
-       then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w)
-       else putStr ((show nr)++ "," ++ (doListy5 (head rozw)))
+       then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w ++ "\n")
+       else putStr ((show nr)++ "," ++ (doListy5 (head rozw)) ++ "\n")
   where rozw = [ (v1,v2,v3,v4,v5) | v5 <- [1..32], v4 <- [1..32], v3 <- [1..64], v2 <- [1..64], v1 <- [1..64], sprawdzRownania5 e (v1,v2,v3,v4,v5)]
 
-
+parseE1 :: (Int, String) -> IO ()
 parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
   where (e, s) = parseEngine w
 
 
 
 
-main = parseE1 (1, "122000010")
+main = (map read . lines) `fmap` readFile "cars_list" >>= mapM_ parseE1
 
 
 printNum :: Int -> String
