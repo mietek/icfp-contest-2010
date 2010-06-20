@@ -19,8 +19,7 @@ def list_all_cars():
   table = title_div.find("table")
   tds = table.findAll("td", attrs={"style": "width: 20%;"})
   cars = [td.string.strip() for td in tds]
-  cars.sort()
-  return cars
+  return sorted(cars, key=int)
 
 
 if __name__ == '__main__':

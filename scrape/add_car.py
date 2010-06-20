@@ -35,7 +35,7 @@ def add_car(car, circuit):
 
 if __name__ == '__main__':
   if len(sys.argv) < 3:
-    print "Usage: solve.py <car> <circuit>"
+    print "Usage: add_car.py <car> <circuit>"
   else:
     login.login()
     add_car(sys.argv[1], sys.argv[2])
