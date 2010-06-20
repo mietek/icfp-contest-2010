@@ -1,3 +1,4 @@
+module Main where
 import Data.List
 import System.Environment (getArgs)
 import Types
