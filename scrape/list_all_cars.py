@@ -18,7 +18,7 @@ def list_all_cars():
   title_div = soup.find("div", attrs={"id": "_title_div"})
   table = title_div.find("table")
   tds = table.findAll("td", attrs={"style": "width: 20%;"})
-  cars = [td.string for td in tds]
+  cars = [td.string.strip() for td in tds]
   cars.sort()
   return cars
 

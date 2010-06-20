@@ -8,7 +8,7 @@ import login
 
 
 def solve_page(car):
-  return "http://icfpcontest.org/icfp10/instance/%s/solve/form" % car
+  return "http://icfpcontest.org/icfp10/instance/" + car + "/solve/form"
 
 def get_car(car):
   html = Popen(["curl",
@@ -18,7 +18,7 @@ def get_car(car):
   soup = BeautifulSoup(html)
   title_div = soup.find("div", attrs={"id": "_title_div"})
   div = title_div.find("div", attrs={"id": "roo_solution_instance"})
-  return div.contents[1]
+  return div.contents[1].strip()
 
 
 if __name__ == '__main__':

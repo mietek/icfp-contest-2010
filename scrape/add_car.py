@@ -12,7 +12,7 @@ def add_page():
 
 def add_car(car, circuit):
   html = Popen(["curl",
-                "--data", "problem=" + car,
+                "--data-urlencode", "problem=" + car,
                 "--data-urlencode", "exampleSolution.contents@" + circuit,
                 "-b", "cookie_jar",
                 "-s",
@@ -24,11 +24,11 @@ def add_car(car, circuit):
     pre = title_div.find("pre")
     if pre and pre.string:
       ok = True
-      print pre.string
+      print pre.string.strip()
     errors = title_div.find("span", attrs={"id": "instance.errors"})
     if errors and errors.string:
       ok = True
-      print errors.string
+      print errors.string.strip()
   if not ok:
     print soup.prettify()
 
