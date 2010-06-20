@@ -17,6 +17,7 @@ def solve_car(car, circuit):
                 "-s",
                 solve_page(car)], stdout=PIPE).communicate()[0]
   soup = BeautifulSoup(html)
+  solved = False
   ok = False
   title_div = soup.find("div", attrs={"id": "_title_div"})
   if title_div:
@@ -26,6 +27,8 @@ def solve_car(car, circuit):
       print pre.string.strip()
     errors = title_div.find("span", attrs={"id": "solution.errors"})
     if errors and errors.string:
+      if errors.string == "You have already submitted this solution.":
+        solved = True
       ok = True
       print errors.string.strip()
   else:
@@ -33,6 +36,7 @@ def solve_car(car, circuit):
     if main_div:
       msg_div = main_div.find("div", attrs={"version": "2.0"})
       if msg_div and msg_div.contents and len(msg_div.contents) > 1:
+        solved = True
         ok = True
         print msg_div.contents[0].strip()
       pre = main_div.find("pre")
@@ -41,6 +45,7 @@ def solve_car(car, circuit):
         print pre.string.strip()
   if not ok:
     print soup.prettify()
+  return solved
 
 
 if __name__ == '__main__':
@@ -48,4 +53,5 @@ if __name__ == '__main__':
     print "Usage: solve.py <car> <circuit>"
   else:
     login.login()
-    solve_car(sys.argv[1], sys.argv[2])
+    if solve_car(sys.argv[1], sys.argv[2]):
+      print "*** SOLVED ***"
