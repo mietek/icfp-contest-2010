@@ -177,7 +177,19 @@ appendFoo2t c = Circuit gates2 inp foo2tGR
       foo2tN = arraySize gates1
       foo2tGR = GateConn foo2tN R Delay
       foo2tGL = GateConn foo2tN L Delay
-
+appendFoo1t c = Circuit gates2 foo1tGL foo1tGL
+    where
+      Circuit gates1 inp@(GateConn inN inC _ ) out@(GateConn outN outC _) = c
+      Gate outC1inp (outC1L, outC1R)  = gates1 ! outN
+      Gate (inC1L,inC1R) inC1out = gates1 ! inN
+      out1' = Gate outC1inp $ if outC == L then (foo1tGR, outC1R) else (outC1L, foo1tGR)
+      in1' = Gate (if inC == L then (foo1tGR, inC1R) else (inC1L, foo1tGR)) inC1out
+      gates1' = gates1 // [(inN,in1'),(outN,out1')]
+      gates2 = array (0,foo1tN) $ assocs gates1' ++ [(foo1tN,foo1tGate)]
+      foo1tN = arraySize gates1
+      foo1tGate = Gate (External,out) (External,inp)
+      foo1tGR = GateConn foo1tN R Delay
+      foo1tGL = GateConn foo1tN L Delay
 
 
 foo = either (error "f**k handcraft") id $ parseCircuit "1L:\n1L2R0#X2R,\nX2L0#0L2L,\n1R0R0#1R0R:\n0L\n"
@@ -185,7 +197,7 @@ foo2t = either (error "f**k handcraft") id  $ parseCircuit "0L:\n0LX0#0LX:\n0L\n
 foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
 x ^^^ 1 = x
 x ^^^ k = combineCircuits x (x^^^(k-1))
-p1 m 0 = (foo ^^^ m) `combineCircuits` foo2t
+p1 m 0 = appendFoo2t $ foo ^^^ m
 p1 m k = (appendFoo2t $foo ^^^ (m-k))  `combineCircuits` (foo ^^^ k)
 
 
@@ -223,7 +235,7 @@ serverInput = "01202101210201202"
 taskOutput = "11021210112101221"
 
 
-genDodaj m k = p1 m k `combineCircuits` foo1t
+genDodaj m k = appendFoo1t $ p1 m k
 compGenDodaj m (x:xs) = foldl (\c x-> c `combineCircuits` p1 m x) c1 xs
     where c1 = p1 m x
 
