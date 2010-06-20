@@ -19,10 +19,13 @@ def list_all_cars():
   table = title_div.find("table")
   tds = table.findAll("td", attrs={"style": "width: 20%;"})
   cars = [td.string.strip() for td in tds]
-  cars.sort()
-  return cars
+  unique_cars = list(set(cars))
+  return sorted(unique_cars, key=int)
 
 
 if __name__ == '__main__':
+  if len(sys.argv) != 2:
+    print "Usage: list_all_cars.py"
+    sys.exit()
   login.login()
   print "\n".join(list_all_cars())

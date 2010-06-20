@@ -49,9 +49,9 @@ def solve_car(car, circuit):
 
 
 if __name__ == '__main__':
-  if len(sys.argv) < 3:
-    print "Usage: solve.py <car> <circuit>"
-  else:
-    login.login()
-    if solve_car(sys.argv[1], sys.argv[2]):
-      print "*** SOLVED ***"
+  if len(sys.argv) != 3:
+    print "Usage: solve_car.py <car> <circuit>"
+    sys.exit()
+  login.login()
+  if solve_car(sys.argv[1], sys.argv[2]):
+    print "(*** SOLVED ***)" + "\007"
