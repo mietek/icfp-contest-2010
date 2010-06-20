@@ -56,7 +56,68 @@ parseEngine ('1':xs) = takeN 1 parseCham xs
 parseEngine ('2':'2':xs) = takeN (n+2) parseCham rst
   where (n, rst) = parseNum xs
 
+zmienNotacje [] = (0, 0, 0, 0, 0, 0)
+zmienNotacje (0:xs) = (a+1, b, c, d, e, f)
+  where (a,b,c,d,e,f) = zmienNotacje xs
+zmienNotacje (1:xs) = (a, b+1, c, d, e, f)
+  where (a,b,c,d,e,f) = zmienNotacje xs
+zmienNotacje (2:xs) = (a, b, c+1, d, e, f)
+  where (a,b,c,d,e,f) = zmienNotacje xs
+zmienNotacje (3:xs) = (a, b, c, d+1, e, f)
+  where (a,b,c,d,e,f) = zmienNotacje xs
+zmienNotacje (4:xs) = (a, b, c, d, e+1, f)
+  where (a,b,c,d,e,f) = zmienNotacje xs
+zmienNotacje (5:xs) = (a, b, c, d, e, f+1)
+  where (a,b,c,d,e,f) = zmienNotacje xs
 
+zmienNotacje5 xs = (a,b,c,d,e)
+  where (a,b,c,d,e, f) = zmienNotacje xs
+  
+sumujKrotki (a,b,c,d,e,f) (a',b',c',d',e',f') = (a+a',b+b',c+c',d+d',e+e',f+f')
+
+sumujPary [] = []
+sumujPary ((a,b,c):xs) = ((sumujKrotki a c) :) $ sumujPary xs
+
+sumujWsio xs = foldr sumujKrotki (0,0,0,0,0,0) zs
+  where zs = sumujPary xs
+  
+czySzesc xs = a>0
+  where (_,_,_,_,_,a) = sumujWsio xs
+
+
+sprawdzRownanie ((a,b,c,d,e,f), Aux,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f >= v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
+sprawdzRownanie ((a,b,c,d,e,f), Main,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f > v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
+
+sprawdzRownanie5 ((a,b,c,d,e), Aux,(a',b',c',d',e')) (v1,v2,v3, v4, v5) = v1^a+v2^b+v3^c+v4^d+v5^e >= v1^a'+v2^b'+v3^c'+v4^d'+v5^e'
+sprawdzRownanie5 ((a,b,c,d,e), Main,(a',b',c',d',e')) (v1,v2,v3, v4, v5) = v1^a+v2^b+v3^c+v4^d+v5^e > v1^a'+v2^b'+v3^c'+v4^d'+v5^e'
+
+
+sprawdzRownania [] _ = True
+sprawdzRownania ((l,t,p):rs) wartosciowanie = if (sprawdzRownanie ((zmienNotacje l), t,(zmienNotacje p)) wartosciowanie) then (sprawdzRownania rs wartosciowanie) else False
+
+sprawdzRownania5 [] _ = True
+sprawdzRownania5 ((l,t,p):rs) wartosciowanie = if (sprawdzRownanie5 ((zmienNotacje5 l), t,(zmienNotacje5 p)) wartosciowanie) then (sprawdzRownania5 rs wartosciowanie) else False
+
+
+doListy (v1, v2, v3, v4, v5, v6) = printFuel [[[v1]],[[v2]],[[v3]],[[v4]],[[v5]],[[v6]]]
+
+doListy5 (v1, v2, v3, v4, v5) = printFuel [[[v1]],[[v2]],[[v3]],[[v4]],[[v5]]]
+
+parse6 nr w e = if ([] == rozw)
+       then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w)
+       else putStr ((show nr)++ "," ++ (doListy (head rozw)))
+  where rozw = [ (v1,v2,v3,v4,v5,v6) | v1 <- [1..30], v2 <- [1..30], v3 <- [1..30], v4 <- [1..30], v5 <- [1..30], v6 <- [1..30], (sprawdzRownania e (v1,v2,v3,v4,v5,v6))]
+
+parse5 nr w e = if ([] == rozw)
+       then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w)
+       else putStr ((show nr)++ "," ++ (doListy5 (head rozw)))
+  where rozw = [ (v1,v2,v3,v4,v5) | v1 <- [1..64], v2 <- [1..64], v3 <- [1..64], v4 <- [1..64], v5 <- [1..64], sprawdzRownania5 e (v1,v2,v3,v4,v5)]
+
+
+parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
+  where (e, s) = parseEngine w
+
+  
 printNum :: Int -> String
 printNum k = case ngr of
   0 -> "0"
@@ -88,3 +149,4 @@ printFuel [x] = '1':printMat x
 printFuel xss = "22" ++ printNum (length xss - 2) ++ concatMap printMat xss
 
 
+car ="2210101022010102201111102211111001122100101102211110110"
