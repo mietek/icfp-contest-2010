@@ -22,8 +22,8 @@ def get_car(car):
 
 
 if __name__ == '__main__':
-  if len(sys.argv) < 2:
+  if len(sys.argv) != 2:
     print "Usage: get_car.py <car>"
-  else:
-    login.login()
-    print get_car(sys.argv[1])
+    sys.exit()
+  login.login()
+  print get_car(sys.argv[1])

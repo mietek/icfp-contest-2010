@@ -24,5 +24,8 @@ def list_all_cars():
 
 
 if __name__ == '__main__':
+  if len(sys.argv) != 2:
+    print "Usage: list_all_cars.py"
+    sys.exit()
   login.login()
   print "\n".join(list_all_cars())
