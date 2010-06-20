@@ -56,6 +56,7 @@ appendAsdf c = Circuit gates2 foo1tGL foo1tGL
 foo = Circuit {cGates = array (0,2) [(0,Gate (GateConn 1 L Delay,GateConn 2 R Delay) (External,GateConn 2 R NoDelay)),(1,Gate (External,GateConn 2 L Delay) (GateConn 0 L Delay,GateConn 2 L NoDelay)),(2,Gate (GateConn 1 R NoDelay,GateConn 0 R NoDelay) (GateConn 1 R Delay,GateConn 0 R Delay))], cInput = GateConn 1 L NoDelay, cOutput = GateConn 0 L NoDelay}
 foo2t = Circuit {cGates = array (0,0) [(0,Gate (GateConn 0 L Delay,External) (GateConn 0 L Delay,External))], cInput = GateConn 0 R NoDelay, cOutput = GateConn 0 R NoDelay}
 foo1t = Circuit {cGates = array (0,0) [(0,Gate (External,GateConn 0 R Delay) (External,GateConn 0 R Delay))], cInput = GateConn 0 L NoDelay, cOutput = GateConn 0 L NoDelay}
+finrod = either (error "f**k handcraft") id $ "0R:\n2RX0#1R1L,\n0R0L0#2L2R,\n1L1R0#3R0L,\n5R2L0#4R4L,\n3R3L0#5R5L,\n4R4L0#X3L:\n5L"
 
 --foo2t = either (error "f**k handcraft") id  $ parseCircuit "0R:\n0LX0#0LX:\n0R\n"
 --foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
@@ -114,6 +115,7 @@ isTrit '2' = True
 isTrit _ = False
 
 debug = mapM_ print . zip [1..] .  lines . showCircuit
+genPrefix file = writeFile file $ showCircuit $ compGenDodaj 17 $ wejscia 17 serverInput taskOutput
 
 main :: IO ()
 main = putStrLn . mkFactory . filter isTrit . head =<< getArgs
