@@ -30,3 +30,4 @@ if __name__ == '__main__':
     sys.exit()
   login.login()
   print "\n".join(list_all_cars())
+  login.logout()
