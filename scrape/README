@@ -1,0 +1,8 @@
+Get a list of all cars:
+./get_cars.py
+
+Get the definiton of a car:
+./get_car.py 219
+
+Submit a solution for a car:
+./solve_car.py 291 circuit.txt
