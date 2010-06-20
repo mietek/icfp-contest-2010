@@ -1,1 +1,36 @@
 2416: 111111111111111
+
+
+2416:  1 1 11
+19991: 22 10  22 0 2201010 2201010  22 0 220100 22000  22 0 220100 22000
+
+
+02:21 <@finrod1> zadanie ma numer 19991
+02:21 <@finrod1> i wygląda tak:
+02:21 <@finrod1> -0-1-2-
+02:21 <@finrod1> -1-0-2-
+02:21 <@finrod1> więc potrzebowałem macierzy 2x2
+02:22 <@finrod1> chciałem wysłać kodowanie takiego ciągu macierzy
+      [ ((1,1), (1,1)), ((1,0), (0, 0)), ((1, 0), (0, 0)) ]
+02:22 <@finrod1> ale miało grubo ponad 11k bramek
+02:23 <@finrod1> dasz radę zająć się jutro tą minimalizacją? bo ktoś to musi porządnie zrobić :P
+02:23 <@mietek> Jak wygląda zakodowany ciąg paliwa dla tego?
+02:23 <@mietek> Na razie piszę skrypty pomocnicze
+02:28 <@finrod1> coś w stylu 2210 220 220 1010 220 1010 220 220 100 220 00 220 220 100 220 00
+
+
+
+1 zbiornik, 1 skladnik, 2:
+1 1 11
+
+
+2 zbiorniki, 1 skladnik, 2:
+22 0 1 11 1 11
+
+"surplus of ingredient 1 in lower pipe when air consists of ingredient 1 only" dla niektórych
+
+
+3 zbiorniki, 1 skladnik, 2:
+
+22 10 1 11 1 11 1 11 -- nie dziala?!
+22 10 1 11 1 11 1 11 0 -- działa, może są śmieci przy kompilacji
