@@ -50,7 +50,20 @@ appendAsdf c = Circuit gates2 foo1tGL foo1tGL
       foo1tGate = Gate (External,out) (External,inp)
       foo1tGR = GateConn foo1tN R Delay
       foo1tGL = GateConn foo1tN L Delay
-
+-- ?LX0#X?L
+appendAsdf2 c = Circuit gates2 foo1tGR foo1tGL
+    where
+      Circuit gates1 inp@(GateConn inN inC _ ) out@(GateConn outN outC _) = c
+      Gate outC1inp (outC1L, outC1R)  = gates1 ! outN
+      Gate (inC1L,inC1R) inC1out = gates1 ! inN
+      out1' = Gate outC1inp $ if outC == L then (foo1tGL, outC1R) else (outC1L, foo1tGL)
+      in1' = Gate (if inC == L then (foo1tGR, inC1R) else (inC1L, foo1tGR)) inC1out
+      gates1' = gates1 // [(inN,in1'),(outN,out1')]
+      gates2 = array (0,foo1tN) $ assocs gates1' ++ [(foo1tN,foo1tGate)]
+      foo1tN = arraySize gates1
+      foo1tGate = Gate (out,External) (External,inp)
+      foo1tGR = GateConn foo1tN R Delay
+      foo1tGL = GateConn foo1tN L Delay
 
 --foo = either (error "f**k handcraft") id $ parseCircuit "1L:\n1L2R0#X2R,\nX2L0#0L2L,\n1R0R0#1R0R:\n0L\n"
 foo = Circuit {cGates = array (0,2) [(0,Gate (GateConn 1 L Delay,GateConn 2 R Delay) (External,GateConn 2 R NoDelay)),(1,Gate (External,GateConn 2 L Delay) (GateConn 0 L Delay,GateConn 2 L NoDelay)),(2,Gate (GateConn 1 R NoDelay,GateConn 0 R NoDelay) (GateConn 1 R Delay,GateConn 0 R Delay))], cInput = GateConn 1 L NoDelay, cOutput = GateConn 0 L NoDelay}
@@ -67,8 +80,51 @@ x ^^^ k = combineCircuits x (x^^^(k-1))
 p1 m 0 = finrod `combineCircuits` foo2t
 p1 m k = finrod `combineCircuits` foo2t `combineCircuits` (foo ^^^ k)
 
+-- finroda gadzet pierwszy
+-- map (2-) | g1
+g1 =  appendAsdf2 (finrod `combineCircuits` foo2t)
+-- finroda gadzet drugi
+g2 =  appendAsdf2 (finrod `combineCircuits` foo1t)
+g0 =  appendAsdf2 finrod
 
 
+s12 '0' = '0'
+s12 '1' = '2'
+s12 '2' = '1'
+
+s02 '0' = '2'
+s02 '1' = '1'
+s02 '2' = '0'
+
+s01 '0' = '1'
+s01 '1' = '0'
+s01 '2' = '2'
+
+data Tok = G0 -- 0* z lewej
+            | G1 -- 01* z lewej
+            | G2 -- 2* z lewej
+            | D Int
+            deriving Show
+
+factory :: String -> [Tok]
+factory [] = []
+factory inp@('1':xs) = G0 : factory (map s12 inp)
+factory inp@('2':xs) = G2 : factory (map s02 inp)
+factory ('0':'1':xs) = G1 : factory ('0' : '0' : map s01 xs)
+factory ('0':xs) = aux 1 xs
+  where aux n [] = [D n]
+        aux n ('0':xs) = aux (n+1) xs
+        aux n ('1':xs) = if n > 1 then D (n-1):factory ('0':'1':xs) else factory ('0':'1':xs)
+        aux n ('2':xs) = D n : factory ('2':xs)
+
+-- data Tok = G0 | G1 | G2 | D Int
+fromTok G0 = g0
+fromTok G1 = g1
+fromTok G2 = g2
+fromTok (D n) = foo ^^^ n
+
+finishIt =  foldl combineCircuits finrod . map fromTok
+{-
 -- czyste lenistwo
 mehInt '0' = 0
 mehInt '1' = 1
@@ -98,18 +154,20 @@ korekta m x y =  map sum $ map (map mehInt) $ znajdz m x y
 wejscia m x y = map (m-) (korekta m x y)
 
 ciag01 m k= (take  k ['0' | x <- [0..]]) ++ (take (m-k) ['1' | x <- [1..]])
-
+-}
 serverInput = "01202101210201202"
 taskOutput = "11021210112101221"
 
-
+{-
 genDodaj m k = appendAsdf $ p1 m k
 compGenDodaj m (x:xs) = foldl (\c y-> c `combineCircuits` genDodaj m y) c1 xs
     where c1 = genDodaj m x
-
+-
 compFooDodaj m k inps = {-(foo ^^^ k)-} finrod `combineCircuits` (compGenDodaj m inps)
-mkFactory str = showCircuit $  compFooDodaj l l $ wejscia l (replicate l '0') (taskOutput ++ str)
-    where l = length str + (length taskOutput)
+-}
+mkFactory = showCircuit . finishIt . factory . (taskOutput ++)
+--compFooDodaj l l $ wejscia l (replicate l '0') (taskOutput ++ str)
+ --   where l = length str + (length taskOutput)
 
 isTrit :: Char -> Bool
 isTrit '0' = True
@@ -117,8 +175,8 @@ isTrit '1' = True
 isTrit '2' = True
 isTrit _ = False
 
-debug = mapM_ print . zip [1..] .  lines . showCircuit
-genPrefix file = writeFile file $ showCircuit $ compGenDodaj 17 $ wejscia 17 serverInput taskOutput
+debug = mapM_ print . zip [0..] .  lines . showCircuit
+--genPrefix file = writeFile file $ showCircuit $ compGenDodaj 17 $ wejscia 17 serverInput taskOutput
 
 main :: IO ()
 main = putStrLn . mkFactory . filter isTrit . head =<< getArgs
