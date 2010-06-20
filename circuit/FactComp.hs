@@ -37,6 +37,7 @@ combineCircuits c1 c2 = Circuit gates3 inp out
 -- daje bramke x na koniec fabryki, bramka przejmuje cale io
 -- x mowi do wejscia c i na swiat
 -- x slucha z wyjscia c i na swiat
+-- X?L0#X?L
 appendAsdf c = Circuit gates2 foo1tGL foo1tGL
     where
       Circuit gates1 inp@(GateConn inN inC _ ) out@(GateConn outN outC _) = c
@@ -50,6 +51,7 @@ appendAsdf c = Circuit gates2 foo1tGL foo1tGL
       foo1tGate = Gate (External,out) (External,inp)
       foo1tGR = GateConn foo1tN R Delay
       foo1tGL = GateConn foo1tN L Delay
+
 -- ?LX0#X?L
 appendAsdf2 c = Circuit gates2 foo1tGR foo1tGL
     where
@@ -75,6 +77,7 @@ finrod = Circuit {cGates = array (0,5) [(0,Gate (GateConn 2 R Delay,External) (G
 
 --foo2t = either (error "f**k handcraft") id  $ parseCircuit "0R:\n0LX0#0LX:\n0R\n"
 --foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
+
 x ^^^ 1 = x
 x ^^^ k = combineCircuits x (x^^^(k-1))
 --p1 m 0 =  foo ^^^ m `combineCircuits` foo2t

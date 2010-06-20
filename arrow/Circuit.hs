@@ -202,6 +202,9 @@ finrod= proc inp -> do
       (out, rR5) <- gate -< (rR4, rL4)
   returnA -< out
 
+g1 = proc inp -> do
+  rec
+r
 {-
 -- czyste lenistwo
 mehInt '0' = 0
