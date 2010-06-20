@@ -167,6 +167,17 @@ combineCircuits c1 c2 = Circuit gates3 inp out
       finalSize = arraySize gates1 + arraySize gates2' - 1
       gates3 = gates2' // [(i,gates1' ! i) | i <- [0..arraySize gates1' - 1]]
 
+appendFoo2t c = Circuit gates2 inp foo2tGR
+    where
+      Circuit gates1 inp out@(GateConn outN outC _) = c
+      Gate outC1inp (outC1L, outC1R)  = gates1 ! outN
+      out1' = Gate outC1inp $ if outC == L then (foo2tGR, outC1R) else (outC1L, foo2tGR)
+      gates2 = array (0,foo2tN) $ (assocs (gates1 // [(outN,out1')])) ++ [(foo2tN,foo2tGate)]
+      foo2tGate = Gate (foo2tGL,out) (foo2tGL,External)
+      foo2tN = arraySize gates1
+      foo2tGR = GateConn foo2tN R Delay
+      foo2tGL = GateConn foo2tN L Delay
+
 
 
 foo = either (error "f**k handcraft") id $ parseCircuit "1L:\n1L2R0#X2R,\nX2L0#0L2L,\n1R0R0#1R0R:\n0L\n"
@@ -175,7 +186,8 @@ foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
 x ^^^ 1 = x
 x ^^^ k = combineCircuits x (x^^^(k-1))
 p1 m 0 = (foo ^^^ m) `combineCircuits` foo2t
-p1 m k = ((foo ^^^ (m-k)) `combineCircuits` foo2t) `combineCircuits` (foo ^^^ k)
+p1 m k = (appendFoo2t $foo ^^^ (m-k))  `combineCircuits` (foo ^^^ k)
+
 
 -- czyste lenistwo
 mehInt '0' = 0
