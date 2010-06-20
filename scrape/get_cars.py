@@ -30,6 +30,9 @@ def aux(dict,x):
     else:
         return True
 
+def foo(dict):
+    return sorted(filter(lambda x: aux(dict,x[0]),get_cars(1)) ,key=lambda x: len(x[1]))
+
 if __name__ == '__main__':
   if len(sys.argv) != 1:
     print "Usage: get_cars.py"
@@ -39,9 +42,6 @@ if __name__ == '__main__':
       tmp = l.split(' ')
       dict[int(tmp[0])] = int(tmp[1])
 
-
-
-
-  for e in sorted(filter(lambda x: aux(dict,x[0]),get_cars(1)) ,key=lambda x: len(x[1])):
+  for e in foo(dict):
       print e
 

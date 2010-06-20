@@ -3,7 +3,8 @@
 from subprocess import Popen, PIPE
 import sys
 
-import list_all_cars
+#import list_all_cars
+import get_cars
 import login
 import solve_car
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
   print str(len(solved_list)) + " cars solved"
   print
   login.login()
-  cars = list_all_cars.list_all_cars()
+  cars = map(lambda x: x[0],get_cars.foo({})) #list_all_cars.list_all_cars()
   if reverse:
     cars.reverse()
   for car in cars:
