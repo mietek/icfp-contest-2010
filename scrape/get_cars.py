@@ -19,7 +19,7 @@ def get_cars(id):
         ret += [(asff,temp[:len(temp) -1])]
 
     nextid = int(asff)
-    print nextid
+   # print nextid
     if nextid > id:
         ret += get_cars(nextid)
     return ret
