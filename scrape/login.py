@@ -17,4 +17,5 @@ def login():
          login_page()], stdout=PIPE).communicate()[0]
 
 
-login()
+if __name__ == '__main__':
+  login()

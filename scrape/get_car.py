@@ -18,11 +18,12 @@ def get_car(car):
   soup = BeautifulSoup(html)
   title_div = soup.find("div", attrs={"id": "_title_div"})
   div = title_div.find("div", attrs={"id": "roo_solution_instance"})
-  print div.contents[1]
+  return div.contents[1]
 
 
-if len(sys.argv) < 2:
-  print "Usage: solve.py <car>"
-else:
-  login.login()
-  get_car(sys.argv[1])
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    print "Usage: solve.py <car>"
+  else:
+    login.login()
+    print get_car(sys.argv[1])

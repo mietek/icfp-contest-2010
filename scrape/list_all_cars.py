@@ -9,7 +9,7 @@ import login
 def cars_page():
   return "http://icfpcontest.org/icfp10/score/instanceTeamCount"
 
-def list_cars():
+def list_all_cars():
   html = Popen(["curl",
                 "-b", "cookie_jar",
                 "-s",
@@ -20,8 +20,9 @@ def list_cars():
   tds = table.findAll("td", attrs={"style": "width: 20%;"})
   cars = [td.string for td in tds]
   cars.sort()
-  print "\n".join(cars)
+  return cars
 
 
-login.login()
-list_cars()
+if __name__ == '__main__':
+  login.login()
+  print "\n".join(list_all_cars())

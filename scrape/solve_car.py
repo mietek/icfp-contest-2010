@@ -7,15 +7,15 @@ import sys
 import login
 
 
-def add_page():
-  return "http://icfpcontest.org/icfp10/instance"
+def solve_page(car):
+  return "http://icfpcontest.org/icfp10/instance/%s/solve" % car
 
-def add_car(car, circuit):
+def solve_car(car, circuit):
   html = Popen(["curl",
-                "-d", "problem=0&exampleSolution.contents=" + circuit,
+                "-d", "contents=" + circuit,
                 "-b", "cookie_jar",
                 "-s",
-                add_page()], stdout=PIPE).communicate()[0]
+                solve_page(car)], stdout=PIPE).communicate()[0]
   soup = BeautifulSoup(html)
   title_div = soup.find("div", attrs={"id": "_title_div"})
   pre = title_div.find("pre")
@@ -23,7 +23,7 @@ def add_car(car, circuit):
   if pre != None and pre.string != None:
     ok = True
     print pre.string
-  errors = title_div.find("span", attrs={"id": "instance.errors"})
+  errors = title_div.find("span", attrs={"id": "solution.errors"})
   if errors != None and errors.string != None:
     ok = True
     print errors.string
@@ -31,9 +31,10 @@ def add_car(car, circuit):
     print title_div.prettify()
 
 
-if len(sys.argv) < 3:
-  print "Usage: solve.py <car> <circuit>"
-else:
-  login.login()
-  circuit = open(sys.argv[2]).read()
-  add_car(sys.argv[1], circuit)
+if __name__ == '__main__':
+  if len(sys.argv) < 3:
+    print "Usage: solve.py <car> <circuit>"
+  else:
+    login.login()
+    circuit = open(sys.argv[2]).read()
+    solve_car(sys.argv[1], circuit)
