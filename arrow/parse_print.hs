@@ -1,3 +1,5 @@
+module Main where
+
 import Data.List
 import System.IO
 
@@ -113,12 +115,12 @@ doListy5 (v1, v2, v3, v4, v5) = printFuel [[[v1]],[[v2]],[[v3]],[[v4]],[[v5]]]
 parse6 nr w e = if ([] == rozw)
        then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w)
        else putStr ((show nr)++ "," ++ (doListy (head rozw)))
-  where rozw = [ (v1,v2,v3,v4,v5,v6) | v6 <- [1..25], v5 <- [1..25], v3 <- [1..25], v4 <- [1..25], v2 <- [1..25], v1 <- [1..25], (sprawdzRownania e (v1,v2,v3,v4,v5,v6))]
+  where rozw = [ (v1,v2,v3,v4,v5,v6) | v6 <- [1..16], v5 <- [1..16], v3 <- [1..16], v4 <- [1..16], v2 <- [1..16], v1 <- [1..16], (sprawdzRownania e (v1,v2,v3,v4,v5,v6))]
 
 parse5 nr w e = if ([] == rozw)
        then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w ++ "\n")
        else putStr ((show nr)++ "," ++ (doListy5 (head rozw)) ++ "\n")
-  where rozw = [ (v1,v2,v3,v4,v5) | v5 <- [1..32], v4 <- [1..32], v3 <- [1..32], v2 <- [1..32], v1 <- [1..64], sprawdzRownania5 e (v1,v2,v3,v4,v5)]
+  where rozw = [ (v1,v2,v3,v4,v5) | v5 <- [1..25], v4 <- [1..25], v3 <- [1..32], v2 <- [1..32], v1 <- [1..32], sprawdzRownania5 e (v1,v2,v3,v4,v5)]
 
 parseE1 :: (Int, String) -> IO ()
 parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
