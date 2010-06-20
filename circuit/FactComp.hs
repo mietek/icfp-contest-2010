@@ -101,16 +101,16 @@ s01 '1' = '0'
 s01 '2' = '2'
 
 data Tok = G0 -- 0* z lewej
-            | G1 -- 01* z lewej
-            | G2 -- 2* z lewej
+            | G1 -- 2* z lewej
+            | G2 -- 01* z lewej
             | D Int
             deriving Show
 
 factory :: String -> [Tok]
 factory [] = []
 factory inp@('1':xs) = G0 : factory (map s12 inp)
-factory inp@('2':xs) = G2 : factory (map s02 inp)
-factory ('0':'1':xs) = G1 : factory ('0' : '0' : map s01 xs)
+factory inp@('2':xs) = G1 : factory (map s02 inp)
+factory ('0':'1':xs) = G2 : factory ('0' : '0' : map s01 xs)
 factory ('0':xs) = aux 1 xs
   where aux n [] = [D n]
         aux n ('0':xs) = aux (n+1) xs
