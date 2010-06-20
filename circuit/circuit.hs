@@ -236,8 +236,8 @@ taskOutput = "11021210112101221"
 
 
 genDodaj m k = appendFoo1t $ p1 m k
-compGenDodaj m (x:xs) = foldl (\c x-> c `combineCircuits` p1 m x) c1 xs
-    where c1 = p1 m x
+compGenDodaj m (x:xs) = foldl (\c y-> c `combineCircuits` genDodaj m y) c1 xs
+    where c1 = genDodaj m x
 
 compFooDodaj m k inps = (foo ^^^ k) `combineCircuits` (compGenDodaj m inps)
 mkFactory str = showCircuit $  compFooDodaj l l $ wejscia l (replicate l '0') (taskOutput ++ str)
