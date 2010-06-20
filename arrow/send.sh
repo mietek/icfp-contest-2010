@@ -16,7 +16,8 @@ sendSol() {
     curl -d "contents=$2" $(solvePage $1) -b $(login) -D bar
 }
 
-
+IFS=""
 Input=`cat $2`
+#echo -e $Input
 echo "$(sendSol $1 $Input |  sed -e 's/<\(.\)*<pre>\(.\)*//g' | sed -e 's/<\/pre\(.\)*//g' | sed -e 's/<\(.\)*//g' | sed -e 's/\(.\)*\(;\|}\|{\)//g' )"
 
