@@ -255,7 +255,7 @@ genP m c inp out k = genFooToN c inp (show (c + (m-k) *3) ++  "R") (m-k) ++
                      genFooToN (c + (m-k)*3 +1) (show (c + (m-k)*3) ++ "R") out k
 
 genP1 = genP 17
--- p1 >>> foo1t
+-- p1 + cos_dziwnego
 genDodaj m c inp out 0 = p1 ++ (inp) ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
     where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") 0
           lp1 = length $ lines $ genP m 0 "" "" 0
