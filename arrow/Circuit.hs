@@ -239,7 +239,7 @@ ciag01 m k= (take  k ['0' | x <- [0..]]) ++ (take (m-k) ['1' | x <- [1..]])
 
 -- kod maka
 -- n >= 2
-
+-- foo^^k
 genFooToN _ _ _ 0 = ""
 genFooToN c inp out 1 = generujFoo c inp out
 genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
@@ -247,7 +247,7 @@ genFooToN c inp out n = generujFoo c inp (show (c+4)++"L") ++
               generujFoo (c+3*(n-1)) ((show $ c + (n-1) * 3 - 3) ++"L") out
 
 genFoo2t c inp out = show c ++ "L" ++ inp  ++ "0#" ++ show c ++ "L" ++ out ++ ",\n"
-
+-- p1
 genP m c inp out 0 = genFooToN c inp (show (c+m *3) ++  "R") m ++
                      genFoo2t (c+m*3) (show (c+m * 3 - 3) ++ "L") out
 genP m c inp out k = genFooToN c inp (show (c + (m-k) *3) ++  "R") (m-k) ++
@@ -255,7 +255,7 @@ genP m c inp out k = genFooToN c inp (show (c + (m-k) *3) ++  "R") (m-k) ++
                      genFooToN (c + (m-k)*3 +1) (show (c + (m-k)*3) ++ "R") out k
 
 genP1 = genP 17
-
+-- p1 >>> foo1t
 genDodaj m c inp out 0 = p1 ++ (inp) ++ (show (c+lp1-1) ++ "R") ++ "0#" ++ out ++  (show (c + 1)++"L") ++ ",\n"
     where p1 = genP m c (show (c+lp1) ++ "R") (show (c+lp1) ++"R") 0
           lp1 = length $ lines $ genP m 0 "" "" 0
@@ -278,7 +278,6 @@ compGenDodaj c m inp out ((a,b):xs) =
 compFooDodaj m c inp out  k inps =
     genFooToN c inp (show (l + m * 3 + 1) ++ "L") k ++ compGenDodaj l m (show (l -3) ++"L") out inps
   where l = 3 * k
-
 
 isTrit :: Char -> Bool
 isTrit '0' = True

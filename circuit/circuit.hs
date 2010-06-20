@@ -9,6 +9,7 @@ import Array
 import System.Environment
 import System.Exit
 import Data.List
+import System.Environment (getArgs)
 
 data Trit = Z | O | T
 zero = Z
@@ -27,6 +28,12 @@ data Circuit = Circuit
     , cInput  :: Wire
     , cOutput :: Wire
     } deriving (Show, Eq)
+
+showWire External = "X"
+showWire (GateConn i c _) = show i ++ show c
+showGate (Gate (iL,iR) (oL,oR)) = showWire iL ++ showWire iR ++ "0#" ++ showWire oL ++ showWire oR ++ ",\n"
+showCircuit (Circuit cg ci co) = showWire ci ++ ":\n" ++ body ++ showWire co ++ "\n"
+    where body = reverse .  ("\n:" ++)  . drop 2 . reverse . concatMap ( showGate . (cg!)) $ [0..(snd $ bounds cg)]
 
 prWire n c = concat ["r", show c, show n]
 
@@ -162,11 +169,67 @@ combineCircuits c1 c2 = Circuit gates3 inp out
 
 
 
+foo = either (error "f**k handcraft") id $ parseCircuit "1L:\n1L2R0#X2R,\nX2L0#0L2L,\n1R0R0#1R0R:\n0L\n"
+foo2t = either (error "f**k handcraft") id  $ parseCircuit "0L:\n0LX0#0LX:\n0L\n"
+foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
+x ^^^ 1 = x
+x ^^^ k = combineCircuits x (x^^^(k-1))
+p1 m 0 = (foo ^^^ m) `combineCircuits` foo2t
+p1 m k = ((foo ^^^ (m-k)) `combineCircuits` foo2t) `combineCircuits` (foo ^^^ k)
+
+-- czyste lenistwo
+mehInt '0' = 0
+mehInt '1' = 1
+mehInt '2' = 2
+mehStr 0 = '0'
+mehStr 1 = '1'
+mehStr 2 = '2'
+
+dodajChar x y = mehStr $ ((mehInt x) + (mehInt y)) `mod` 3
+ujmijChar x y = mehStr $ ((mehInt x) - (mehInt y)) `mod` 3
+
+-- dodawanie ciagow
+dodaj [] [] = []
+dodaj (c1:cs) (c2:cs2) = (dodajChar c1 c2): (dodaj cs cs2)
+
+-- wyszukiwanie potrzebnych bramek jesli tylko dodajemy
+szukaj _ [] [] _ = []
+szukaj m (x:xs) (y:ys) k =  gs ++ (szukaj m zs ys (k+1))
+    where gs = generuj m x y k
+          zs = foldl dodaj xs (map (drop (k+1)) gs)
+
+generuj m x y k = take (mehInt (ujmijChar y x)) [ ciag01 m k | x <- [0..]]
+
+znajdz m x y = szukaj m x y 0
+
+korekta m x y =  map sum $ map (map mehInt) $ znajdz m x y
+wejscia m x y = map (m-) (korekta m x y)
+
+ciag01 m k= (take  k ['0' | x <- [0..]]) ++ (take (m-k) ['1' | x <- [1..]])
+
+serverInput = "01202101210201202"
+taskOutput = "11021210112101221"
 
 
+genDodaj m k = p1 m k `combineCircuits` foo1t
+compGenDodaj m (x:xs) = foldl (\c x-> c `combineCircuits` p1 m x) c1 xs
+    where c1 = p1 m x
+
+compFooDodaj m k inps = (foo ^^^ k) `combineCircuits` (compGenDodaj m inps)
+mkFactory str = showCircuit $  compFooDodaj l l $ wejscia l (replicate l '0') (taskOutput ++ str)
+    where l = length str + (length taskOutput)
+
+isTrit :: Char -> Bool
+isTrit '0' = True
+isTrit '1' = True
+isTrit '2' = True
+isTrit _ = False
+
+debug = mapM_ print . zip [1..] .  lines . showCircuit
 
 main :: IO ()
-main = do
+main = putStrLn . mkFactory . filter isTrit . head =<< getArgs
+ {-do
   args <- getArgs
   case args of
     [factorySchemaFile] -> do
@@ -180,3 +243,4 @@ main = do
               --   Nothing -> putStrLn "broken input" >> exitFailure
               --   Just input -> putStrLn $ showTernaryStream $ evalCircuit factory input
     _ -> putStrLn "usage: ./circuit shema.txt" >> exitFailure
+-}
