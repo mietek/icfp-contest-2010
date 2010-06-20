@@ -47,7 +47,7 @@ if __name__ == '__main__':
   print str(len(solved_list)) + " cars solved"
   print
   login.login()
-  cars = map(lambda x: x[0],get_cars.foo({})) #list_all_cars.list_all_cars()
+  cars = map(lambda x: str(x[0]),get_cars.foo({})) #list_all_cars.list_all_cars()
   if reverse:
     cars.reverse()
   for car in cars:
