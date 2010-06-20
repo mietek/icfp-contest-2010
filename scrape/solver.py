@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import solve_car
 import sys
