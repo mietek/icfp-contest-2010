@@ -12,7 +12,8 @@ def add_page():
 
 def add_car(car, circuit):
   html = Popen(["curl",
-                "-d", "problem=0&exampleSolution.contents=" + circuit,
+                "--data", "problem=" + car,
+                "--data-urlencode", "exampleSolution.contents@" + circuit,
                 "-b", "cookie_jar",
                 "-s",
                 add_page()], stdout=PIPE).communicate()[0]
@@ -37,5 +38,4 @@ if __name__ == '__main__':
     print "Usage: solve.py <car> <circuit>"
   else:
     login.login()
-    circuit = open(sys.argv[2]).read()
-    add_car(sys.argv[1], circuit)
+    add_car(sys.argv[1], sys.argv[2])

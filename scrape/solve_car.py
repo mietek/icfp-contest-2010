@@ -12,7 +12,7 @@ def solve_page(car):
 
 def solve_car(car, circuit):
   html = Popen(["curl",
-                "-d", "contents=" + circuit,
+                "--data-urlencode", "contents@" + circuit,
                 "-b", "cookie_jar",
                 "-s",
                 solve_page(car)], stdout=PIPE).communicate()[0]
@@ -48,5 +48,4 @@ if __name__ == '__main__':
     print "Usage: solve.py <car> <circuit>"
   else:
     login.login()
-    circuit = open(sys.argv[2]).read()
-    solve_car(sys.argv[1], circuit)
+    solve_car(sys.argv[1], sys.argv[2])
