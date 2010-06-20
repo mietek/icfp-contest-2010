@@ -17,18 +17,19 @@ def add_car(car, circuit):
                 "-s",
                 add_page()], stdout=PIPE).communicate()[0]
   soup = BeautifulSoup(html)
-  title_div = soup.find("div", attrs={"id": "_title_div"})
-  pre = title_div.find("pre")
   ok = False
-  if pre != None and pre.string != None:
-    ok = True
-    print pre.string
-  errors = title_div.find("span", attrs={"id": "instance.errors"})
-  if errors != None and errors.string != None:
-    ok = True
-    print errors.string
+  title_div = soup.find("div", attrs={"id": "_title_div"})
+  if title_div:
+    pre = title_div.find("pre")
+    if pre and pre.string:
+      ok = True
+      print pre.string
+    errors = title_div.find("span", attrs={"id": "instance.errors"})
+    if errors and errors.string:
+      ok = True
+      print errors.string
   if not ok:
-    print title_div.prettify()
+    print soup.prettify()
 
 
 if __name__ == '__main__':
