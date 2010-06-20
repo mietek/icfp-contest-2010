@@ -2,3 +2,5 @@
 *.o
 *.pyc
 scrape/cookie_jar
+circuit/circuit
+arrow/circuit
