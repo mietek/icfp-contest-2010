@@ -119,8 +119,8 @@ addWire c (i, o) =
   if conflict i o (cSrc c)
     then error ("Source " ++ show i ++ " already connected to destination " ++ show (cSrc c M.! i) ++ ", not " ++ show o)
     else if conflict o i (cDst c)
-           then error ("Destination " ++ show o ++ " already connected to source " ++ show (cDst c M.! o) ++ ", not " ++ show o)
-           else C { cSrc = M.insert i o (cSrc c), cDst = M.insert o i (cDst c) }
+      then error ("Destination " ++ show o ++ " already connected to source " ++ show (cDst c M.! o) ++ ", not " ++ show o)
+      else C { cSrc = M.insert i o (cSrc c), cDst = M.insert o i (cDst c) }
 
 addGate :: Circuit -> (Integer, Gate) -> Circuit
 addGate c (n, (li, ri, lo, ro)) = c4
