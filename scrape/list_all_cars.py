@@ -2,6 +2,7 @@
 
 from BeautifulSoup import BeautifulSoup
 from subprocess import Popen, PIPE
+import sys
 
 import login
 
@@ -24,7 +25,7 @@ def list_all_cars():
 
 
 if __name__ == '__main__':
-  if len(sys.argv) != 2:
+  if len(sys.argv) != 1:
     print "Usage: list_all_cars.py"
     sys.exit()
   login.login()
