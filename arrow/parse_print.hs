@@ -82,7 +82,7 @@ sumujKrotki :: Int6 -> Int6 -> Int6
 sumujKrotki (a,b,c,d,e,f) (a',b',c',d',e',f') = (a+a',b+b',c+c',d+d',e+e',f+f')
 
 sumujPary [] = []
-sumujPary ((a,b,c):xs) = ((sumujKrotki a c) :) $ sumujPary xs
+sumujPary ((a,b,c):xs) = ((sumujKrotki (zmienNotacje a) (zmienNotacje c)) :) $ sumujPary xs
 
 sumujWsio :: [I
 sumujWsio xs = foldr sumujKrotki (0,0,0,0,0,0) zs
