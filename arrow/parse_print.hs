@@ -40,7 +40,7 @@ parsePipe ('0':xs) = ([], xs)
 parsePipe ('1':xs) = takeN 1 parseNum xs
 parsePipe ('2':'2':xs) = takeN (n+2) parseNum rst
   where (n, rst) = parseNum xs
-  
+
 parseCham :: String -> (Cham, String)
 parseCham s = ((up, mode, lp), t3)
   where (up, t1) = parsePipe s
@@ -56,6 +56,10 @@ parseEngine ('1':xs) = takeN 1 parseCham xs
 parseEngine ('2':'2':xs) = takeN (n+2) parseCham rst
   where (n, rst) = parseNum xs
 
+type Int6 = (Int,Int,Int,Int,Int,Int)
+type Int5 = (Int,Int,Int,Int,Int)
+
+zmienNotacje :: [Int] -> Int6
 zmienNotacje [] = (0, 0, 0, 0, 0, 0)
 zmienNotacje (0:xs) = (a+1, b, c, d, e, f)
   where (a,b,c,d,e,f) = zmienNotacje xs
@@ -70,21 +74,24 @@ zmienNotacje (4:xs) = (a, b, c, d, e+1, f)
 zmienNotacje (5:xs) = (a, b, c, d, e, f+1)
   where (a,b,c,d,e,f) = zmienNotacje xs
 
+zmienNotacje5 :: [Int] -> Int5
 zmienNotacje5 xs = (a,b,c,d,e)
   where (a,b,c,d,e, f) = zmienNotacje xs
-  
+
+sumujKrotki :: Int6 -> Int6 -> Int6
 sumujKrotki (a,b,c,d,e,f) (a',b',c',d',e',f') = (a+a',b+b',c+c',d+d',e+e',f+f')
 
 sumujPary [] = []
 sumujPary ((a,b,c):xs) = ((sumujKrotki a c) :) $ sumujPary xs
 
+sumujWsio :: [I
 sumujWsio xs = foldr sumujKrotki (0,0,0,0,0,0) zs
   where zs = sumujPary xs
-  
+
 czySzesc xs = a>0
   where (_,_,_,_,_,a) = sumujWsio xs
 
-
+{-
 sprawdzRownanie ((a,b,c,d,e,f), Aux,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f >= v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
 sprawdzRownanie ((a,b,c,d,e,f), Main,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f > v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
 
@@ -116,8 +123,8 @@ parse5 nr w e = if ([] == rozw)
 
 parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
   where (e, s) = parseEngine w
+-}
 
-  
 printNum :: Int -> String
 printNum k = case ngr of
   0 -> "0"
