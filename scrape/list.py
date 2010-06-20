@@ -9,7 +9,7 @@ import login
 def cars_page():
   return "http://icfpcontest.org/icfp10/score/instanceTeamCount"
 
-def get_cars():
+def list_cars():
   html = Popen(["curl",
                 "-b", "cookie_jar",
                 "-s",
@@ -24,4 +24,4 @@ def get_cars():
 
 
 login.login()
-cars = get_cars()
+list_cars()

@@ -1,8 +1,11 @@
 Get a list of all cars:
-./get_cars.py
+./list.py
 
 Get the definition of a car:
-./get_car.py 219
+./get.py 219
 
 Submit a solution for a car:
-./solve_car.py 291 circuit.txt
+./solve.py 291 circuit.txt
+
+Add a new car:
+./add.py 122000010 circuit.txt

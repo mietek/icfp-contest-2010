@@ -15,3 +15,6 @@ def login():
          "-c", "cookie_jar",
          "-s",
          login_page()], stdout=PIPE).communicate()[0]
+
+
+login()
