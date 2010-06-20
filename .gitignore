@@ -1,0 +1,4 @@
+*.hi
+*.o
+*.pyc
+scrape/cookie_jar
