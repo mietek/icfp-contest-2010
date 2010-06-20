@@ -55,7 +55,7 @@ if __name__ == '__main__':
     else:
       print car + ":"
       if solve_car.solve_car(car, circuit):
-        print "(*** SOLVED ***)"
+        print "(*** SOLVED ***)" + "\007"
         solved_set.add(car)
         solved_list = sorted(list(solved_set), key=int)
         write_solved_file(solved_list)

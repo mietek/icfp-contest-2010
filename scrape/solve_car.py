@@ -54,4 +54,4 @@ if __name__ == '__main__':
     sys.exit()
   login.login()
   if solve_car(sys.argv[1], sys.argv[2]):
-    print "*** SOLVED ***"
+    print "(*** SOLVED ***)" + "\007"
