@@ -84,14 +84,13 @@ sumujKrotki (a,b,c,d,e,f) (a',b',c',d',e',f') = (a+a',b+b',c+c',d+d',e+e',f+f')
 sumujPary [] = []
 sumujPary ((a,b,c):xs) = ((sumujKrotki (zmienNotacje a) (zmienNotacje c)) :) $ sumujPary xs
 
-sumujWsio :: [I
 sumujWsio xs = foldr sumujKrotki (0,0,0,0,0,0) zs
   where zs = sumujPary xs
 
 czySzesc xs = a>0
   where (_,_,_,_,_,a) = sumujWsio xs
 
-{-
+
 sprawdzRownanie ((a,b,c,d,e,f), Aux,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f >= v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
 sprawdzRownanie ((a,b,c,d,e,f), Main,(a',b',c',d',e',f')) (v1,v2,v3, v4, v5, v6) = v1^a+v2^b+v3^c+v4^d+v5^e+v6^f > v1^a'+v2^b'+v3^c'+v4^d'+v5^e'+v6^f'
 
@@ -123,7 +122,7 @@ parse5 nr w e = if ([] == rozw)
 
 parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
   where (e, s) = parseEngine w
--}
+
 
 printNum :: Int -> String
 printNum k = case ngr of
