@@ -28,7 +28,7 @@ def write_solved_file(solved_list):
 
 if __name__ == '__main__':
   if len(sys.argv) < 2:
-    print "Usage: solve_all_cars.py <circuit>"
+    print "Usage: solve_all_cars.py <circuit> [--reverse]"
   else:
     solved_list = sorted(read_solved_file(), key=int)
     write_solved_file(solved_list)
@@ -37,7 +37,8 @@ if __name__ == '__main__':
     print
     login.login()
     cars = list_all_cars.list_all_cars()
-    cars.reverse()
+    if len(sys.argv) > 2 and sys.argv[2] == "--reverse":
+      cars.reverse()
     for car in cars:
       if car in solved_set:
         print car + ": solved"

@@ -19,7 +19,8 @@ def list_all_cars():
   table = title_div.find("table")
   tds = table.findAll("td", attrs={"style": "width: 20%;"})
   cars = [td.string.strip() for td in tds]
-  return sorted(cars, key=int)
+  unique_cars = list(set(cars))
+  return sorted(unique_cars, key=int)
 
 
 if __name__ == '__main__':
