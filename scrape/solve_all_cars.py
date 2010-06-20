@@ -60,4 +60,3 @@ if __name__ == '__main__':
         solved_list = sorted(list(solved_set), key=int)
         write_solved_file(solved_list)
     print
-  login.logout()
