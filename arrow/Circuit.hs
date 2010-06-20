@@ -190,6 +190,19 @@ foo2t = proc inp -> do
       (rR0, out) <- gate -< (rR0', inp)
   returnA -< out
 
+finrod= proc inp -> do
+  rec
+      rR2' <- delay T0 -< rR2
+      rR5' <- delay T0 -< rR5
+      (rL0, rR0) <- gate -< (rR2', inp)
+      (rL1, rR1) <- gate -< (rR0, rL0)
+      (rL2, rR2) <- gate -< (rL1, rR1)
+      (rL3, rR3) <- gate -< (rR5', rL2)
+      (rL4, rR4) <- gate -< (rR3, rL3)
+      (out, rR5) <- gate -< (rR4, rL4)
+  returnA -< out
+
+{-
 -- czyste lenistwo
 mehInt '0' = 0
 mehInt '1' = 1
@@ -293,3 +306,4 @@ mkFactory str =
                         in (++ (show (len - 1) ++ "L")) $ reverse ("\n:" ++ (drop 2 $ reverse l))
 
 main = putStrLn . mkFactory . filter isTrit . head =<< getArgs
+-}

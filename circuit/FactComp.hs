@@ -69,7 +69,9 @@ appendAsdf2 c = Circuit gates2 foo1tGR foo1tGL
 foo = Circuit {cGates = array (0,2) [(0,Gate (GateConn 1 L Delay,GateConn 2 R Delay) (External,GateConn 2 R NoDelay)),(1,Gate (External,GateConn 2 L Delay) (GateConn 0 L Delay,GateConn 2 L NoDelay)),(2,Gate (GateConn 1 R NoDelay,GateConn 0 R NoDelay) (GateConn 1 R Delay,GateConn 0 R Delay))], cInput = GateConn 1 L NoDelay, cOutput = GateConn 0 L NoDelay}
 foo2t = Circuit {cGates = array (0,0) [(0,Gate (GateConn 0 L Delay,External) (GateConn 0 L Delay,External))], cInput = GateConn 0 R NoDelay, cOutput = GateConn 0 R NoDelay}
 foo1t = Circuit {cGates = array (0,0) [(0,Gate (External,GateConn 0 R Delay) (External,GateConn 0 R Delay))], cInput = GateConn 0 L NoDelay, cOutput = GateConn 0 L NoDelay}
-finrod = either (error "f**k handcraft") id . parseCircuit $ "0R:\n2RX0#1R1L,\n0R0L0#2L2R,\n1L1R0#3R0L,\n5R2L0#4R4L,\n3R3L0#5R5L,\n4R4L0#X3L:\n5L"
+finrod = Circuit {cGates = array (0,5) [(0,Gate (GateConn 2 R Delay,External) (GateConn 1 R NoDelay,GateConn 1 L NoDelay)),(1,Gate (GateConn 0 R NoDelay,GateConn 0 L NoDelay) (GateConn 2 L NoDelay,GateConn 2 R NoDelay)),(2,Gate (GateConn 1 L NoDelay,GateConn 1 R NoDelay) (GateConn 3 R NoDelay,GateConn 0 L Delay)),(3,Gate (GateConn 5 R Delay,GateConn 2 L NoDelay) (GateConn 4 R NoDelay,GateConn 4 L NoDelay)),(4,Gate (GateConn 3 R NoDelay,GateConn 3 L NoDelay) (GateConn 5 R NoDelay,GateConn 5 L NoDelay)),(5,Gate (GateConn 4 R NoDelay,GateConn 4 L NoDelay) (External,GateConn 3 L Delay))], cInput = GateConn 0 R NoDelay, cOutput = GateConn 5 L NoDelay}
+
+--finrod = either (error "f**k handcraft") id . parseCircuit $ "0R:\n2RX0#1R1L,\n0R0L0#2L2R,\n1L1R0#3R0L,\n5R2L0#4R4L,\n3R3L0#5R5L,\n4R4L0#X3L:\n5L"
 
 --foo2t = either (error "f**k handcraft") id  $ parseCircuit "0R:\n0LX0#0LX:\n0R\n"
 --foo1t = either (error "f**k handcraft") id $ parseCircuit "0L:\nX0R0#X0R:\n0L\n"
