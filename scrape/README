@@ -1,7 +1,7 @@
 Get a list of all cars:
 ./get_cars.py
 
-Get the definiton of a car:
+Get the definition of a car:
 ./get_car.py 219
 
 Submit a solution for a car:
