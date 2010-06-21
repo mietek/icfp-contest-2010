@@ -70,7 +70,7 @@ parseEngine ('2':'2':xs) = takeN (n+2) parseCham rst
   where (n, rst) = parseNum xs
 
 printEngine :: Eng -> String
-printEngine = concatMap printCham
+printEngine = printStringList . map printCham
 
 type Int6 = (Int,Int,Int,Int,Int,Int)
 type Int5 = (Int,Int,Int,Int,Int)
@@ -166,6 +166,11 @@ printList :: [Int] -> String
 printList [] = "0"
 printList [x] = '1':printNum x
 printList xss = "22" ++ printNum (length xss - 2) ++ concatMap printNum xss
+
+printStringList :: [String] -> String
+printStringList [] = "0"
+printStringList [x] = '1':x
+printStringList xss = "22" ++ printNum (length xss - 2) ++ concat xss
 
 printMat :: [[Int]] -> String
 printMat [] = "0"
