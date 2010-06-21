@@ -162,17 +162,23 @@ parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
   (hFlush stdout)
   where (e, s) = parseEngine w
 
-extendCar :: String -> String
+extendCar :: String -> (String, String)
 extendCar car =
   let (e, _) = parseEngine car
-      e' = e ++ [([0,1,2,3,4,5],Aux,[0,1,2,3,4,5])] in
-  printEngine e'
-
-getFuel :: String -> IO ()
-getFuel car = parseE1 (0, car)
+      e' = e ++ [([0,1,2,3,4,5],Aux,[0,1,2,3,4,5])]
+      f = if (czySzesc e) then parse6' 0 car e else parse5' 0 car e in
+  (printEngine e', f)
 
 
-main = (map read . lines) `fmap` readFile "cars_list" >>= mapM_ parseE1
+main :: IO ()
+main = do
+  car <- getContents
+  let (car', fuel) = extendCar car
+  putStrLn car'
+  putStrLn fuel
+  
+
+--main = (map read . lines) `fmap` readFile "cars_list" >>= mapM_ parseE1
 
 
 printNum :: Int -> String
@@ -212,3 +218,4 @@ printFuel xss = "22" ++ printNum (length xss - 2) ++ concatMap printMat xss
 
 
 car ="2210101022010102201111102211111001122100101102211110110"
+
