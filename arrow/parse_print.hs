@@ -53,11 +53,24 @@ parseCham s = ((up, mode, lp), t3)
           0 -> Main
           1 -> Aux
 
+printPipe :: Pipe -> String
+printPipe = printList
+
+printMode :: Mode -> String
+printMode Main = printNum 0
+printMode Aux = printNum 1
+
+printCham :: Cham -> String
+printCham (up, m, lp) = printPipe up ++ printMode m ++ printPipe lp
+
 parseEngine :: String -> (Eng, String)
 parseEngine ('0':xs) = ([], xs)
 parseEngine ('1':xs) = takeN 1 parseCham xs
 parseEngine ('2':'2':xs) = takeN (n+2) parseCham rst
   where (n, rst) = parseNum xs
+
+printEngine :: Eng -> String
+printEngine = concatMap printCham
 
 type Int6 = (Int,Int,Int,Int,Int,Int)
 type Int5 = (Int,Int,Int,Int,Int)
