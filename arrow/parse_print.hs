@@ -112,6 +112,8 @@ doListy (v1, v2, v3, v4, v5, v6) = printFuel [[[v1]],[[v2]],[[v3]],[[v4]],[[v5]]
 
 doListy5 (v1, v2, v3, v4, v5) = printFuel [[[v1]],[[v2]],[[v3]],[[v4]],[[v5]]]
 
+g e = [ (v1,v2,v3,v4,v5,v6) | v6 <- [1..12], v5 <- [1..12], v3 <- [1..12], v4 <- [1..12], v2 <- [1..12], v1 <- [1..12], (sprawdzRownania e (v1,v2,v3,v4,v5,v6))]
+
 parse6 nr w e = if ([] == rozw)
        then putStr ("nierozwiazane:" ++ (show nr) ++ "," ++ w)
        else putStr ((show nr)++ "," ++ (doListy (head rozw)))
