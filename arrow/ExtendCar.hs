@@ -166,7 +166,7 @@ extendCar :: String -> (String, String)
 extendCar car =
   let (e, _) = parseEngine car
       e' = e ++ [([0,1,2,3,4,5],Aux,[0,1,2,3,4,5])]
-      f = if (czySzesc e) then parse6' 0 car e else parse5' 0 car e in
+      f = if (czySzesc e') then parse6' 0 car e' else parse5' 0 car e' in
   (printEngine e', f)
 
 
