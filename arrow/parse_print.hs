@@ -32,6 +32,15 @@ data Mode = Main | Aux deriving Show
 type Cham = (Pipe, Mode, Pipe)
 type Eng  = [Cham]
 
+isTDirDepOnSInCham :: Cham -> Int -> Int -> Bool
+isTDirDepOnSInCham (up, _, lp) t s = t `elem` up && s `elem` lp
+
+-- isTDirDepOnS :: Eng -> Int -> Int -> Bool
+-- isTDirDepOnS chs t s =
+
+
+
+
 takeN :: Int -> (String -> (a, String)) -> String -> ([a], String)
 takeN 0 _ s = ([], s)
 takeN n f s = (fs:rs, xs)
@@ -53,11 +62,24 @@ parseCham s = ((up, mode, lp), t3)
           0 -> Main
           1 -> Aux
 
+printPipe :: Pipe -> String
+printPipe = printList
+
+printMode :: Mode -> String
+printMode Main = printNum 0
+printMode Aux = printNum 1
+
+printCham :: Cham -> String
+printCham (up, m, lp) = printPipe up ++ printMode m ++ printPipe lp
+
 parseEngine :: String -> (Eng, String)
 parseEngine ('0':xs) = ([], xs)
 parseEngine ('1':xs) = takeN 1 parseCham xs
 parseEngine ('2':'2':xs) = takeN (n+2) parseCham rst
   where (n, rst) = parseNum xs
+
+printEngine :: Eng -> String
+printEngine = printStringList . map printCham
 
 type Int6 = (Int,Int,Int,Int,Int,Int)
 type Int5 = (Int,Int,Int,Int,Int)
@@ -130,6 +152,15 @@ parseE1 (nr,w) = if (czySzesc e) then parse6 nr w e  else parse5 nr w e
   (hFlush stdout)
   where (e, s) = parseEngine w
 
+extendCar :: String -> String
+extendCar car =
+  let (e, _) = parseEngine car
+      e' = e ++ [([0,1,2,3,4,5],Aux,[0,1,2,3,4,5])] in
+  printEngine e'
+
+getFuel :: String -> IO ()
+getFuel car = parseE1 (0, car)
+
 
 main = (map read . lines) `fmap` readFile "cars_list" >>= mapM_ parseE1
 
@@ -153,6 +184,11 @@ printList :: [Int] -> String
 printList [] = "0"
 printList [x] = '1':printNum x
 printList xss = "22" ++ printNum (length xss - 2) ++ concatMap printNum xss
+
+printStringList :: [String] -> String
+printStringList [] = "0"
+printStringList [x] = '1':x
+printStringList xss = "22" ++ printNum (length xss - 2) ++ concat xss
 
 printMat :: [[Int]] -> String
 printMat [] = "0"
